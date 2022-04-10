@@ -1,0 +1,116 @@
+~Esto es un comentario
+/~
+~ Esto es un comentario en múltiples líneas
+~/
+
+import {
+searchBar from searchbar.p,
+profileIcon from icon.p
+}
+
+define modules searchBar, profileIcon, ...
+
+module Canvas {
+
+    Template{ ~ Esto define la estructura del elemento
+        top: [
+            topBox(align: center, left: [searchBar], right: [profileIcon])
+            ],
+        center: [listContainer(flex: 1)],
+        bottom: [bottomBox],
+        left: [menu],
+        right: [adContainer],
+
+    }
+
+    Style{
+
+    }
+
+}
+
+module listContainer {
+
+    Template{
+
+    }
+
+    Script{
+        let list = []
+        let n = 100
+        for i in n {
+            list.add(`Product n°${i}`)
+        }
+        list.mapToElement(s -> Element(text: s, background: Color("green")), ) ~Automáticamente agrega la lista de elementos
+    }
+
+}
+
+---
+
+export module Canvas as Button{
+
+    Script{
+        let corner = 10
+    }
+
+    Template{
+        center: buttonText(align: center)
+    }
+
+    Style{
+        backgroundColor: Color("Blue"),
+        rounded-corners: corner ~la propiedad rounded-corners toma el valor de la variable pero no se modifica junto con ella
+    }
+
+    Style.rounded
+
+    rounded
+
+}
+
+
+
+~ Esto es el main y sera lo que se muestre en la pagina.
+module Canvas {
+    Template{
+        top:[],
+        botton:[],
+        left:[],
+        right:[],
+
+        topRight:[],
+        topleft:[],
+        bottonRight:[],
+        bottonLeft:[],
+
+        children:[]
+    }
+    Style{} ~ puro css
+    Script{} ~ puro js
+}
+
+~ Esto es un archivo de Componente Button
+module Button as Canvas{
+    Template{}
+    Style{}
+    Script{}
+}
+
+~Quiero que como minimo pueda recibir tambien un texto para poder hacer componentes primitivos como:
+module Text as Canvas{
+    Template{
+        children: Content("hola")
+    }
+    Style{}
+    Script{}
+}
+
+~ Para despues poder hacer:
+module Button as Canvas{
+    Template{
+        children: [Text(flex: 1 )]
+    }
+    Style{}
+    Script{}
+}
