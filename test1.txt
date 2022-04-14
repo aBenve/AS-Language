@@ -1,4 +1,3 @@
-module Canvas{
-    Template{}
-    Style{}
+module Canvas {
+    Template: {top:[navBar]}
 }

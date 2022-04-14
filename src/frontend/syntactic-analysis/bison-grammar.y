@@ -8,7 +8,7 @@
 	tComponent * component;
 	tComponent ** componentList;
 	tModule * modules;
-	tComponentAsCanvas * compAsCanvas;
+	tComponentAsCanvas * componentAsCanvas;
 	tDefinition * definition;
 	tCanvas * canvas;
 	tArgument * argument;
@@ -31,6 +31,7 @@
 %type <component> component
 %type <componentList> componentList
 %type <canvas> canvas
+%type <componentAsCanvas> componentAsCanvas
 %type <positionItem> positionItem
 %type <positioning> positioning
 %type <template> template
@@ -89,28 +90,32 @@
 	program: modules {  $$ = ProgramModulesGrammarAction($1); }
 		;
 	
-	modules: canvas { /* $$ = CanvasModuleGrammarAction($1); */ }
-		| canvas componentList { /* $$ = MultipleComponentModuleGrammarAction($1, $2); */ }
+	modules: canvas {  $$ = CanvasModuleGrammarAction($1);  }
+		| canvas componentList {  $$ = MultipleComponentModuleGrammarAction($1, $2);  }
+		| componentAsCanvas {  $$ = ComponentAsCanvasModuleGrammarAction($1);  }
+		| componentAsCanvas componentList {  $$ = MultipleComponentAsCancasModuleGrammarAction($1, $2);  }
 		;
 
-	componentList: componentList component { /* $$ = MultipleComponentListGrammarAction($1, $2); */ }
-		| component { /* $$ = SingleComponentListGrammarAction($1); */ }
+	componentList: componentList component {  $$ = MultipleComponentListGrammarAction($1, $2);  }
+		| component {  $$ = SingleComponentListGrammarAction($1);  }
 		;
 
-	component: MODULE STRING OPEN_CURLY_BRACKET definition CLOSE_CURLY_BRACKET 	{ /* $$ = ComponentGrammarAction($2, $4); */ }
+	component: MODULE STRING OPEN_CURLY_BRACKET definition CLOSE_CURLY_BRACKET 	{  $$ = ComponentGrammarAction($2, $4);  }
 		;
 
-	canvas: MODULE CANVAS OPEN_CURLY_BRACKET definition CLOSE_CURLY_BRACKET 	{ /* $$ = CanvasGrammarAction($4); */ }
-		| MODULE STRING AS CANVAS OPEN_CURLY_BRACKET definition CLOSE_CURLY_BRACKET { /* $$ = ComponentAsCanvasGrammarAction($2, $6); */ }
+	componentAsCanvas:	MODULE STRING AS CANVAS OPEN_CURLY_BRACKET definition CLOSE_CURLY_BRACKET {  $$ = ComponentAsCanvasGrammarAction($2, $6);  }
 		;
 
-	definition: template { /* $$ = TemplateDefinitionGrammarAction($1); */ }
-		| template script { /* $$ = TemplateScriptDefinitionGrammarAction($1, $2); */ }
+	canvas: MODULE CANVAS OPEN_CURLY_BRACKET definition CLOSE_CURLY_BRACKET 	{  $$ = CanvasGrammarAction($4);  }
+		;
+
+	definition: template { /*  $$ = TemplateDefinitionGrammarAction($1);  */ }
+		| template script { /*  $$ = TemplateScriptDefinitionGrammarAction($1, $2); */ }
 		| template style { /* $$ = TemplateStyleDefinitionGrammarAction($1, $2); */ }
 		| template script style { /* $$ = TemplateScriptStyleDefinitionGrammarAction($1, $2, $3); */ }
 		;
 
-	template: TEMPLATE OPEN_CURLY_BRACKET positioning CLOSE_CURLY_BRACKET { /* $$ = TemplateGrammarAction($3); */ }
+	template: TEMPLATE COLON OPEN_CURLY_BRACKET positioning CLOSE_CURLY_BRACKET { /* $$ = TemplateGrammarAction($3); */ }
 		;
 
 	positioning: positioning COMMA positionItem { /* $$ = MultiplePositioningGrammarAction($1, $2); */ }

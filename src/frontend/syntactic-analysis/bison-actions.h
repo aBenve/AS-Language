@@ -80,12 +80,15 @@ typedef struct tModule
 tModule *ProgramModulesGrammarAction(tModule *module);
 
 // Module.
-tModule *CanvasModuleGrammarAction(tComponentAsCanvas *canvas);
-tModule *MultipleComponentModuleGrammarAction(tComponentAsCanvas *canvas, tComponent **components);
+tModule *CanvasModuleGrammarAction(tCanvas *canvas);
+tModule *MultipleComponentModuleGrammarAction(tCanvas *canvas, tComponent **components);
+
+tModule *ComponentAsCanvasModuleGrammarAction(tComponentAsCanvas *canvas);
+tModule *MultipleComponentAsCancasModuleGrammarAction(tComponentAsCanvas *canvas, tComponent **components);
 
 // ComponentList.
 tComponent **MultipleComponentListGrammarAction(tComponent **prevComponents, tComponent *component);
-tComponent *SingleComponentListGrammarAction(tComponent *component);
+tComponent **SingleComponentListGrammarAction(tComponent *component);
 
 // Component.
 tComponent *ComponentGrammarAction(char *name, tDefinition *definition);
