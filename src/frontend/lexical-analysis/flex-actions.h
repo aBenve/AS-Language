@@ -2,6 +2,7 @@
 #define FLEX_ACTIONS_HEADER
 
 #include "../../backend/support/shared.h"
+#include "../../backend/support/logger.h"
 
 /**
  * Se definen los diferentes IDs de cada token disponible para el scanner Flex.
@@ -24,6 +25,13 @@ typedef enum TokenID
 	CLOSE_PARENTHESIS,
 	OPEN_CURLY_BRACKET,
 	CLOSE_CURLY_BRACKET,
+	OPEN_SQUARE_BRACKET,
+	CLOSE_SQUARE_BRACKET,
+
+	// Separators.
+	COMMA,
+	COLON,
+	LINE_COMMENT,
 
 	// Tipos de dato.
 	INTEGER,
@@ -35,17 +43,24 @@ typedef enum TokenID
 	LEFT,
 	BOTTOM,
 	TOP,
+	CENTER,
 
 	TOP_RIGHT,
 	TOP_LEFT,
 	BOTTOM_RIGHT,
 	BOTTOM_LEFT,
 
+	TOP_CENTER,
+	BOTTOM_CENTER,
+	LEFT_CENTER,
+	RIGHT_CENTER,
+
 	CHILDREN,
 
 	// Parts of module
 	MODULE,
 	AS,
+	CANVAS,
 	SCRIPT,
 	TEMPLATE,
 	STYLE,

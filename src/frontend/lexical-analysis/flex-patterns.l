@@ -64,9 +64,11 @@ word            [a-zA-Z][a-zA-Z0-9_]*
 "Script"                                        { return SCRIPT; }
 "Style"                                         { return STYLE; }
 
+{boolean}                                      { return BooleanPatternAction(yytext); }
+
 {word}                                          { return StringPatternAction(yytext); }
 {float}                                        { return FloatPatternAction(yytext); }
-{boolean}                                      { return BooleanPatternAction(yytext); }
+
 
 {digit}+									{ return IntegerPatternAction(yytext); }
 

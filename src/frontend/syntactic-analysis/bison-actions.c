@@ -3,6 +3,7 @@
 #include "bison-actions.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 /**
  * Implementación de "bison-grammar.h".
@@ -21,49 +22,98 @@ void yyerror(const char *string)
 	LogErrorRaw("\n\n");
 }
 // Program.
-tModule ProgramModulesGrammarAction(tModule module);
+tModule *ProgramModulesGrammarAction(tModule *module)
+{
+	LogDebug("ProgramModulesGrammarAction: '%s'.", module->canvas->name == NULL ? "Canvas" : module->canvas->name);
+	return module;
+}
 
 // Module.
-tModule CanvasModuleGrammarAction(tCanvas canvas);
-tModule MultipleComponentModuleGrammarAction(tCanvas canvas, tComponent component);
+tModule *CanvasModuleGrammarAction(tComponentAsCanvas *canvas)
+{
+	LogDebug("CanvasModuleGrammarAction: '%s'.", canvas->name == NULL ? "Canvas" : canvas->name);
+	tModule *module = (tModule *)malloc(sizeof(tModule));
+	module->canvas = canvas;
+	return module;
+}
+tModule *MultipleComponentModuleGrammarAction(tComponentAsCanvas *canvas, tComponent **components)
+{
+	LogDebug("MultipleComponentModuleGrammarAction: '%s'.", canvas->name == NULL ? "Canvas" : canvas->name);
+	tModule *module = malloc(sizeof(tModule));
+	module->canvas = canvas;
+	module->components = components;
+	return module;
+}
 
 // ComponentList.
-tComponent *MultipleComponentListGrammarAction(tComponent *prevComponents, tComponent component);
-tComponent SingleComponentListGrammarAction(tComponent component);
+tComponent **MultipleComponentListGrammarAction(tComponent **prevComponents, tComponent *component)
+{
+	LogDebug("MultipleComponentListGrammarAction: '%s'.", component->name);
+	// No importa si no esta bien ahora.
+	tComponent **components = malloc(sizeof(tComponent) * ((sizeof(prevComponents) / sizeof(tComponent *)) + 1));
+	memcpy(components, prevComponents, sizeof(prevComponents));
+	components[(sizeof(prevComponents) / sizeof(tComponent *))] = component;
+	return components;
+}
+tComponent *SingleComponentListGrammarAction(tComponent *component)
+{
+	LogDebug("SingleComponentListGrammarAction: '%s'.", component->name);
+	return component;
+}
 
 // Component.
-tComponent ComponentGrammarAction(char *name, tDefinition definition);
+tComponent *ComponentGrammarAction(char *name, tDefinition *definition)
+{
+	LogDebug("ComponentGrammarAction: '%s'.", name);
+	tComponent *component = malloc(sizeof(tComponent));
+	component->name = name;
+	component->definition = definition;
+	return component;
+}
 
 // Canvas.
-tCanvas CanvasGrammarAction(tDefinition definition);
-tComponentAsCanvas ComponentAsCanvasGrammarAction(const char *name, tDefinition definition);
+tCanvas *CanvasGrammarAction(tDefinition *definition)
+{
+	LogDebug("CanvasGrammarAction: '%s, %s, %s'.", definition->template == NULL ? "Template" : "No Template", definition->style == NULL ? "Style" : "No Style", definition->script == NULL ? "Script" : "No Script");
+	tCanvas *canvas = malloc(sizeof(tCanvas));
+	canvas->definition = definition;
+	return canvas;
+}
+tComponentAsCanvas *ComponentAsCanvasGrammarAction(char *name, tDefinition *definition)
+{
+	LogDebug("ComponentAsCanvasGrammarAction: '%s'.", name);
+	tComponentAsCanvas *componentAsCanvas = malloc(sizeof(tComponentAsCanvas));
+	componentAsCanvas->name = name;
+	componentAsCanvas->definition = definition;
+	return componentAsCanvas;
+}
 
 // Definition.
-tDefinition TemplateDefinitionGrammarAction(tTemplate *template);
-tDefinition TemplateScriptDefinitionGrammarAction(tTemplate *template, tScript *script);
-tDefinition TemplateStyleDefinitionGrammarAction(tTemplate *template, tStyle *style);
-tDefinition TemplateScriptStyleDefinitionGrammarAction(tTemplate *template, tScript *script, tStyle *style);
+tDefinition *TemplateDefinitionGrammarAction(tTemplate *template);
+tDefinition *TemplateScriptDefinitionGrammarAction(tTemplate *template, tScript *script);
+tDefinition *TemplateStyleDefinitionGrammarAction(tTemplate *template, tStyle *style);
+tDefinition *TemplateScriptStyleDefinitionGrammarAction(tTemplate *template, tScript *script, tStyle *style);
 // Template.
-tTemplate TemplateGrammarAction(tPositionItem *positions);
+tTemplate *TemplateGrammarAction(tPositionItem *positions);
 // positioning.
-tPositionItem SinglePositionItemGrammarAction(tPositionItem element);
-tPositionItem *MultiplePositioningGrammarAction(tPositionItem *prevItems, tPositionItem value);
+tPositionItem *SinglePositionItemGrammarAction(tPositionItem *element);
+tPositionItem **MultiplePositioningGrammarAction(tPositionItem **prevItems, tPositionItem *value);
 
 // positionItem.
-tPositionItem TopPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem BottomPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem LeftPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem RightositioningGrammarAction(const char *name, tElement *element);
-tPositionItem TopRightPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem TopLeftPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem BottomRightPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem BottomLeftPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem CenterPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem CenterBottomPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem CenterLeftPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem CenterRightPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem CenterTopPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem ChildrenPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *TopPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *BottomPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *LeftPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *RightositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *TopRightPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *TopLeftPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *BottomRightPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *BottomLeftPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *CenterPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *CenterBottomPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *CenterLeftPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *CenterRightPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *CenterTopPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *ChildrenPositioningGrammarAction(const char *name, tElement *element);
 
 // Style.
 void StyleGrammarAction();
@@ -72,24 +122,23 @@ void StyleGrammarAction();
 void ScriptGrammarAction();
 
 // ElementList.
-tElement *MultipleElementListGrammarAction(tElement **elementList, tElement *element);
-tElement OneElementListGrammarAction(tElement *element);
+tElement **MultipleElementListGrammarAction(tElement **elementList, tElement *element);
+tElement *OneElementListGrammarAction(tElement *element);
 // Element.
-tElement ElementGrammarAction(const char *name);
-tElement ElementWithArgumentsGrammarAction(const char *name, const tArgument **arguments);
+tElement *ElementGrammarAction(const char *name);
+tElement *ElementWithArgumentsGrammarAction(const char *name, tArgument **arguments);
 
 // ArgumentList.
-tArgument SingleArgumentGrammarAction(const tArgument *value);
-tArgument *MultipleArgumentGrammarAction(const tArgument **prevArguments, const tArgument *value);
+tArgument *SingleArgumentGrammarAction(tArgument *value);
+tArgument **MultipleArgumentGrammarAction(tArgument **prevArguments, tArgument *value);
 
 // Argument.
-tArgument StringArgumentGrammarAction(const char *name, const char *value);
-tArgument IntegerArgumentGrammarAction(const char *name, const int value);
-tArgument FloatArgumentGrammarAction(const char *name, const float value);
-tArgument BooleanArgumentGrammarAction(const char *name, const boolean value);
-tArgument ConcatenatedArgumentGrammarAction(const char *name, const tArgument *value);
-tArgument OnlyStringArgumentGrammarAction(const char *value);
-tArgument OnlyIntegerArgumentGrammarAction(const int value);
-tArgument OnlyFloatArgumentGrammarAction(const float value);
-tArgument OnlyBooleanArgumentGrammarAction(const boolean value);
-#endif
+tArgument *StringArgumentGrammarAction(const char *name, const char *value);
+tArgument *IntegerArgumentGrammarAction(const char *name, const int value);
+tArgument *FloatArgumentGrammarAction(const char *name, const float value);
+tArgument *BooleanArgumentGrammarAction(const char *name, const boolean value);
+tArgument *ConcatenatedArgumentGrammarAction(const char *name, tArgument *value);
+tArgument *OnlyStringArgumentGrammarAction(const char *value);
+tArgument *OnlyIntegerArgumentGrammarAction(const int value);
+tArgument *OnlyFloatArgumentGrammarAction(const float value);
+tArgument *OnlyBooleanArgumentGrammarAction(const boolean value);

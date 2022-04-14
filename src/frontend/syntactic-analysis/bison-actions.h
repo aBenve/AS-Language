@@ -11,35 +11,6 @@
  */
 
 //! Como identifico un tComponent de un tComponeneAsCanvas de un tCanvas?
-typedef struct tComponent
-{
-    char *name;
-    tDefinition definition;
-} tComponent;
-
-typedef struct tComponentAsCanvas
-{
-    char *name;
-    tDefinition definition;
-} tComponentAsCanvas;
-
-typedef struct tCanvas
-{
-    tDefinition definition;
-} tCanvas;
-
-typedef struct tDefinition
-{
-    tTemplate template;
-    tStyle style;
-    tScript script;
-} tDefinition;
-
-typedef struct tModule
-{
-    tCanvas canvas;
-    tComponent *components;
-} tModule;
 
 typedef struct tArgument
 {
@@ -61,7 +32,7 @@ typedef struct tPositionItem
 
 typedef struct tTemplate
 {
-    tPositionItem *positions;
+    tPositionItem **positions;
 } tTemplate;
 
 typedef struct tStyle
@@ -73,53 +44,82 @@ typedef struct tScript
 {
     char *value;
 } tScript;
+typedef struct tDefinition
+{
+    tTemplate *template;
+    tStyle *style;
+    tScript *script;
+} tDefinition;
+
+typedef struct tComponent
+{
+    char *name;
+    tDefinition *definition;
+} tComponent;
+
+typedef struct tComponentAsCanvas
+{
+    char *name;
+    tDefinition *definition;
+} tComponentAsCanvas;
+
+typedef struct tCanvas
+{
+    tDefinition *definition;
+} tCanvas;
+
+typedef struct tModule
+{
+    tComponentAsCanvas *canvas;
+    tComponent **components;
+} tModule;
 
 // -----------------------------------------------------------------------------
 
 // Program.
-tModule ProgramModulesGrammarAction(tModule module);
+tModule *ProgramModulesGrammarAction(tModule *module);
 
 // Module.
-tModule CanvasModuleGrammarAction(tCanvas canvas);
-tModule MultipleComponentModuleGrammarAction(tCanvas canvas, tComponent component);
+tModule *CanvasModuleGrammarAction(tComponentAsCanvas *canvas);
+tModule *MultipleComponentModuleGrammarAction(tComponentAsCanvas *canvas, tComponent **components);
 
 // ComponentList.
-tComponent *MultipleComponentListGrammarAction(tComponent *prevComponents, tComponent component);
-tComponent SingleComponentListGrammarAction(tComponent component);
+tComponent **MultipleComponentListGrammarAction(tComponent **prevComponents, tComponent *component);
+tComponent *SingleComponentListGrammarAction(tComponent *component);
 
 // Component.
-tComponent ComponentGrammarAction(char *name, tDefinition definition);
+tComponent *ComponentGrammarAction(char *name, tDefinition *definition);
 
 // Canvas.
-tCanvas CanvasGrammarAction(tDefinition definition);
-tComponentAsCanvas ComponentAsCanvasGrammarAction(const char *name, tDefinition definition);
+tCanvas *CanvasGrammarAction(tDefinition *definition);
+tComponentAsCanvas *ComponentAsCanvasGrammarAction(char *name, tDefinition *definition);
 
 // Definition.
-tDefinition TemplateDefinitionGrammarAction(tTemplate *template);
-tDefinition TemplateScriptDefinitionGrammarAction(tTemplate *template, tScript *script);
-tDefinition TemplateStyleDefinitionGrammarAction(tTemplate *template, tStyle *style);
-tDefinition TemplateScriptStyleDefinitionGrammarAction(tTemplate *template, tScript *script, tStyle *style);
+tDefinition *TemplateDefinitionGrammarAction(tTemplate *template);
+tDefinition *TemplateScriptDefinitionGrammarAction(tTemplate *template, tScript *script);
+tDefinition *TemplateStyleDefinitionGrammarAction(tTemplate *template, tStyle *style);
+tDefinition *TemplateScriptStyleDefinitionGrammarAction(tTemplate *template, tScript *script, tStyle *style);
 // Template.
-tTemplate TemplateGrammarAction(tPositionItem *positions);
+tTemplate *TemplateGrammarAction(tPositionItem *positions);
 // positioning.
-tPositionItem SinglePositionItemGrammarAction(tPositionItem element);
-tPositionItem *MultiplePositioningGrammarAction(tPositionItem *prevItems, tPositionItem value);
+tPositionItem *SinglePositionItemGrammarAction(tPositionItem *element);
+tPositionItem **MultiplePositioningGrammarAction(tPositionItem **prevItems, tPositionItem *value);
 
 // positionItem.
-tPositionItem TopPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem BottomPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem LeftPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem RightositioningGrammarAction(const char *name, tElement *element);
-tPositionItem TopRightPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem TopLeftPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem BottomRightPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem BottomLeftPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem CenterPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem CenterBottomPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem CenterLeftPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem CenterRightPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem CenterTopPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem ChildrenPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *TopPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *BottomPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *LeftPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *RightositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *TopRightPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *TopLeftPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *BottomRightPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *BottomLeftPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *CenterPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *CenterBottomPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *CenterLeftPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *CenterRightPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *CenterTopPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *ChildrenPositioningGrammarAction(const char *name, tElement *element);
 
 // Style.
 void StyleGrammarAction();
@@ -128,24 +128,24 @@ void StyleGrammarAction();
 void ScriptGrammarAction();
 
 // ElementList.
-tElement *MultipleElementListGrammarAction(tElement **elementList, tElement *element);
-tElement OneElementListGrammarAction(tElement *element);
+tElement **MultipleElementListGrammarAction(tElement **elementList, tElement *element);
+tElement *OneElementListGrammarAction(tElement *element);
 // Element.
-tElement ElementGrammarAction(const char *name);
-tElement ElementWithArgumentsGrammarAction(const char *name, const tArgument **arguments);
+tElement *ElementGrammarAction(const char *name);
+tElement *ElementWithArgumentsGrammarAction(const char *name, tArgument **arguments);
 
 // ArgumentList.
-tArgument SingleArgumentGrammarAction(const tArgument *value);
-tArgument *MultipleArgumentGrammarAction(const tArgument **prevArguments, const tArgument *value);
+tArgument *SingleArgumentGrammarAction(tArgument *value);
+tArgument **MultipleArgumentGrammarAction(tArgument **prevArguments, tArgument *value);
 
 // Argument.
-tArgument StringArgumentGrammarAction(const char *name, const char *value);
-tArgument IntegerArgumentGrammarAction(const char *name, const int value);
-tArgument FloatArgumentGrammarAction(const char *name, const float value);
-tArgument BooleanArgumentGrammarAction(const char *name, const boolean value);
-tArgument ConcatenatedArgumentGrammarAction(const char *name, const tArgument *value);
-tArgument OnlyStringArgumentGrammarAction(const char *value);
-tArgument OnlyIntegerArgumentGrammarAction(const int value);
-tArgument OnlyFloatArgumentGrammarAction(const float value);
-tArgument OnlyBooleanArgumentGrammarAction(const boolean value);
+tArgument *StringArgumentGrammarAction(const char *name, const char *value);
+tArgument *IntegerArgumentGrammarAction(const char *name, const int value);
+tArgument *FloatArgumentGrammarAction(const char *name, const float value);
+tArgument *BooleanArgumentGrammarAction(const char *name, const boolean value);
+tArgument *ConcatenatedArgumentGrammarAction(const char *name, tArgument *value);
+tArgument *OnlyStringArgumentGrammarAction(const char *value);
+tArgument *OnlyIntegerArgumentGrammarAction(const int value);
+tArgument *OnlyFloatArgumentGrammarAction(const float value);
+tArgument *OnlyBooleanArgumentGrammarAction(const boolean value);
 #endif
