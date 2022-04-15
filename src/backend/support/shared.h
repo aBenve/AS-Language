@@ -54,4 +54,87 @@ typedef struct
 // El estado se define e inicializa en el archivo "main.c":
 extern CompilerState state;
 
+typedef struct tArgument
+{
+	char *name;
+	void *value;
+} tArgument;
+typedef struct tElement
+{
+	char *name;
+	char **tArgument;
+} tElement;
+typedef struct tPositionItem
+{
+	char *name;
+	char **tElement;
+} tPositionItem;
+
+typedef struct tStyle
+{
+	char *value;
+} tStyle;
+typedef struct tScript
+{
+	char *value;
+} tScript;
+
+typedef struct tTemplate
+{
+	tPositionItem **positions;
+} tTemplate;
+typedef struct tDefinition
+{
+	tTemplate *template;
+	tStyle *style;
+	tScript *script;
+} tDefinition;
+
+typedef struct tComponent
+{
+	char *name;
+	tDefinition *definition;
+} tComponent;
+
+typedef struct tComponentAsCanvas
+{
+	char *name;
+	tDefinition *definition;
+} tComponentAsCanvas;
+
+typedef struct tCanvas
+{
+	tDefinition *definition;
+} tCanvas;
+
+typedef struct tModule
+{
+	tComponentAsCanvas *canvas;
+	tComponent **components;
+} tModule;
+
+typedef union tYYSTYPE
+{
+	tComponent *component;
+	tComponent **componentList;
+	tModule *modules;
+	tComponentAsCanvas *componentAsCanvas;
+	tDefinition *definition;
+	tCanvas *canvas;
+	tArgument *argument;
+	tArgument **argumentList;
+	tElement *element;
+	tElement **elementList;
+	tPositionItem *positionItem;
+	tPositionItem **positioning;
+	tTemplate *template;
+	tStyle *style;
+	tScript *script;
+	char *string;
+	int integer;
+	double floatNumber;
+	boolean boolean;
+	int token;
+} tYYSTYPE;
+
 #endif
