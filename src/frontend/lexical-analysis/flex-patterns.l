@@ -2,6 +2,7 @@
 
 #include "flex-actions.h"
 
+
 %}
 
 /* Obliga a crear una regla explícita para manejar lexemas desconocidos. */
@@ -57,8 +58,8 @@ word            [a-zA-Z][a-zA-Z0-9_]*
 
 "import"                                            { return IMPORT; }
 
-"module"                                        { return MODULE; }
-"Canvas"                                        { return CANVAS; }
+"module"                                        { return ModulePatternAction(yytext); }
+"Canvas"                                        { return CanvasPatternAction(yytext); }
 "as"                                            { return AS; }
 "Template"                                      { return TEMPLATE; }
 "Script"                                        { return SCRIPT; }

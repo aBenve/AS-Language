@@ -24,6 +24,7 @@
 	int integer;
 	double floatNumber;
 	boolean boolean;
+	int token;
 }
 
 
@@ -44,45 +45,45 @@
 %type <argument> argument
 
 
-%token OPEN_PARENTHESIS
-%token CLOSE_PARENTHESIS
+%token <token> OPEN_PARENTHESIS
+%token <token> CLOSE_PARENTHESIS
 
 %token <integer> INTEGER
 %token <string> STRING
 %token <floatNumber> FLOAT
 %token <boolean> BOOLEAN
 
-%token TOP
-%token BOTTOM
-%token LEFT
-%token RIGHT
-%token TOP_LEFT
-%token TOP_RIGHT
-%token BOTTOM_LEFT
-%token BOTTOM_RIGHT
-%token CENTER_RIGHT
-%token CENTER_LEFT
-%token CENTER_BOTTOM
-%token CENTER_TOP
-%token CHILDREN
-%token CENTER
+%token <token> TOP
+%token <token> BOTTOM
+%token <token> LEFT
+%token <token> RIGHT
+%token <token> TOP_LEFT
+%token <token> TOP_RIGHT
+%token <token> BOTTOM_LEFT
+%token <token> BOTTOM_RIGHT
+%token <token> CENTER_RIGHT
+%token <token> CENTER_LEFT
+%token <token> CENTER_BOTTOM
+%token <token> CENTER_TOP
+%token <token> CHILDREN
+%token <token> CENTER
 
-%token OPEN_CURLY_BRACKET
-%token CLOSE_CURLY_BRACKET
-%token OPEN_SQUARE_BRACKET
-%token CLOSE_SQUARE_BRACKET
+%token <token> OPEN_CURLY_BRACKET
+%token <token> CLOSE_CURLY_BRACKET
+%token <token> OPEN_SQUARE_BRACKET
+%token <token> CLOSE_SQUARE_BRACKET
 
-%token IMPORT
-%token MODULE
-%token CANVAS
-%token AS
-%token TEMPLATE
-%token SCRIPT
-%token STYLE
+%token <token> IMPORT
+%token <token> MODULE
+%token <token> CANVAS
+%token <token> AS
+%token <token> TEMPLATE
+%token <token> SCRIPT
+%token <token> STYLE
 
-%token LINE_COMMENT
-%token COLON
-%token COMMA
+%token <token> LINE_COMMENT
+%token <token> COLON
+%token <token> COMMA
 
 
 %%
@@ -115,10 +116,10 @@
 		| template script style { /* $$ = TemplateScriptStyleDefinitionGrammarAction($1, $2, $3); */ }
 		;
 
-	template: TEMPLATE COLON OPEN_CURLY_BRACKET positioning CLOSE_CURLY_BRACKET { /* $$ = TemplateGrammarAction($3); */ }
+	template: TEMPLATE COLON OPEN_CURLY_BRACKET positioning CLOSE_CURLY_BRACKET { /* $$ = TemplateGrammarAction($4); */ }
 		;
 
-	positioning: positioning COMMA positionItem { /* $$ = MultiplePositioningGrammarAction($1, $2); */ }
+	positioning: positioning COMMA positionItem { /* $$ = MultiplePositioningGrammarAction($1, $3); */ }
 		| positionItem { /*$$ = SinglePositionItemGrammarAction($1); */ }
 		;
 

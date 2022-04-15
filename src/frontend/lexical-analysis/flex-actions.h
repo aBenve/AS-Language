@@ -3,7 +3,9 @@
 
 #include "../../backend/support/shared.h"
 #include "../../backend/support/logger.h"
+//#include "../syntactic-analysis/bison-parser.h"
 
+extern tYYSTYPE yylval;
 /**
  * Se definen los diferentes IDs de cada token disponible para el scanner Flex.
  */
@@ -76,7 +78,9 @@ typedef enum TokenID
  * (a.k.a. DFA), como mecanismo de escaneo y reconocimiento.
  */
 
-TokenID StringPatternAction(const char *lexeme);
+TokenID ModulePatternAction(const char *lexeme);
+TokenID CanvasPatternAction(const char *lexeme);
+TokenID StringPatternAction(char *lexeme);
 TokenID FloatPatternAction(const char *lexeme);
 TokenID BooleanPatternAction(const char *lexeme);
 
