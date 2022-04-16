@@ -1,0 +1,19 @@
+module miElemento as Canvas {
+    Template: {
+        top:[otroElemento]
+    }
+}
+
+
+module otroElemento{
+    Template: {}
+    Script: js{
+        
+        let list = []
+        let n = 100
+        for i in n {
+            list.add(`Product n°${i}`)
+        }
+        list.mapToElement("top" ,s -> Element(content: s, background: Color("green")))
+    js}
+}

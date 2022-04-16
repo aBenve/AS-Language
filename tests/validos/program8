@@ -1,0 +1,11 @@
+module miElemento as Canvas {
+    Template: {
+        top:${miVariable}
+    }
+    Script: js{
+        let flag = true
+        let miVariable
+        if(flag)
+            miVariable = "TRUE!!"
+    js}
+}

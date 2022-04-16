@@ -4,6 +4,9 @@
 
 %}
 
+/*
+* Util para el backend.
+
 %union{
 	tComponent * component;
 	tComponent ** componentList;
@@ -45,112 +48,175 @@
 %type <argument> argument
 
 
+
 %token <token> OPEN_PARENTHESIS
 %token <token> CLOSE_PARENTHESIS
+%token <token> OPEN_CURLY_BRACKET
+%token <token> CLOSE_CURLY_BRACKET
+%token <token> OPEN_SQUARE_BRACKET
+%token <token> CLOSE_SQUARE_BRACKET
+
+%token <token> COMMA
+%token <token> COLON
+%token <token> LINE_COMMENT
 
 %token <integer> INTEGER
 %token <string> STRING
 %token <floatNumber> FLOAT
 %token <boolean> BOOLEAN
 
-%token <token> TOP
-%token <token> BOTTOM
-%token <token> LEFT
 %token <token> RIGHT
-%token <token> TOP_LEFT
-%token <token> TOP_RIGHT
-%token <token> BOTTOM_LEFT
-%token <token> BOTTOM_RIGHT
-%token <token> CENTER_RIGHT
-%token <token> CENTER_LEFT
-%token <token> CENTER_BOTTOM
-%token <token> CENTER_TOP
-%token <token> CHILDREN
+%token <token> LEFT
+%token <token> BOTTOM
+%token <token> TOP
 %token <token> CENTER
 
-%token <token> OPEN_CURLY_BRACKET
-%token <token> CLOSE_CURLY_BRACKET
-%token <token> OPEN_SQUARE_BRACKET
-%token <token> CLOSE_SQUARE_BRACKET
+%token <token> TOP_RIGHT
+%token <token> TOP_LEFT
+%token <token> BOTTOM_RIGHT
+%token <token> BOTTOM_LEFT
 
-%token <token> IMPORT
+%token <token> TOP_CENTER
+%token <token> BOTTOM_CENTER
+%token <token> LEFT_CENTER
+%token <token> RIGHT_CENTER
+
+%token <token> CHILDREN
+
+
 %token <token> MODULE
-%token <token> CANVAS
 %token <token> AS
-%token <token> TEMPLATE
+%token <token> CANVAS
 %token <token> SCRIPT
+%token <token> TEMPLATE
 %token <token> STYLE
 
-%token <token> LINE_COMMENT
-%token <token> COLON
-%token <token> COMMA
+%token <token> IMPORT
 
+*/
+
+
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+
+
+%token OPEN_PARENTHESIS
+%token CLOSE_PARENTHESIS
+%token OPEN_CURLY_BRACKET
+%token CLOSE_CURLY_BRACKET
+%token OPEN_SQUARE_BRACKET
+%token CLOSE_SQUARE_BRACKET
+
+%token COMMA
+%token COLON
+%token LINE_COMMENT
+%token DOLLAR
+%token DOT
+
+%token INTEGER
+%token STRING
+%token FLOAT
+%token BOOLEAN
+%token TEXT
+
+%token RIGHT
+%token LEFT
+%token BOTTOM
+%token TOP
+%token CENTER
+
+%token TOP_RIGHT
+%token TOP_LEFT
+%token BOTTOM_RIGHT
+%token BOTTOM_LEFT
+
+%token TOP_CENTER
+%token BOTTOM_CENTER
+%token LEFT_CENTER
+%token RIGHT_CENTER
+
+%token CHILDREN
+
+%token MODULE
+%token PROPS
+%token AS
+%token CANVAS
+%token SCRIPT
+%token TEMPLATE
+%token STYLE
+%token CSS_CODE
+%token JS_CODE
+
+%token IMPORT
 
 %%
 
-	program: modules {  $$ = ProgramModulesGrammarAction($1); }
+	program: modules { printf("ProgramGrammarAction\n"); state.succeed = true;  /* $$ = ProgramModulesGrammarAction($1); */}
 		;
 	
-	modules: canvas {  $$ = CanvasModuleGrammarAction($1);  }
-		| canvas componentList {  $$ = MultipleComponentModuleGrammarAction($1, $2);  }
-		| componentAsCanvas {  $$ = ComponentAsCanvasModuleGrammarAction($1);  }
-		| componentAsCanvas componentList {  $$ = MultipleComponentAsCancasModuleGrammarAction($1, $2);  }
+	modules: canvas { /* $$ = CanvasModuleGrammarAction($1); */ }
+		| canvas componentList { /* $$ = MultipleComponentModuleGrammarAction($1, $2); */ }
+		| componentAsCanvas { /* $$ = ComponentAsCanvasModuleGrammarAction($1);  */ }
+		| componentAsCanvas componentList { /* $$ = MultipleComponentAsCancasModuleGrammarAction($1, $2); */  }
 		;
 
-	componentList: componentList component {  $$ = MultipleComponentListGrammarAction($1, $2);  }
-		| component {  $$ = SingleComponentListGrammarAction($1);  }
+	componentList: componentList component { /* $$ = MultipleComponentListGrammarAction($1, $2); */  }
+		| component { /* $$ = SingleComponentListGrammarAction($1); */ }
 		;
 
-	component: MODULE STRING OPEN_CURLY_BRACKET definition CLOSE_CURLY_BRACKET 	{  $$ = ComponentGrammarAction($2, $4);  }
+	component: MODULE STRING OPEN_CURLY_BRACKET definition CLOSE_CURLY_BRACKET 	{ /* $$ = ComponentGrammarAction($2, $4); */   }
 		;
 
-	componentAsCanvas:	MODULE STRING AS CANVAS OPEN_CURLY_BRACKET definition CLOSE_CURLY_BRACKET {  $$ = ComponentAsCanvasGrammarAction($2, $6);  }
+	componentAsCanvas:	MODULE STRING AS CANVAS OPEN_CURLY_BRACKET definition CLOSE_CURLY_BRACKET { /* $$ = ComponentAsCanvasGrammarAction($2, $6); */  }
 		;
 
-	canvas: MODULE CANVAS OPEN_CURLY_BRACKET definition CLOSE_CURLY_BRACKET 	{  $$ = CanvasGrammarAction($4);  }
+	canvas: MODULE CANVAS OPEN_CURLY_BRACKET definition CLOSE_CURLY_BRACKET 	{ /* $$ = CanvasGrammarAction($4); */  }
 		;
 
 	definition: template { /*  $$ = TemplateDefinitionGrammarAction($1);  */ }
 		| template script { /*  $$ = TemplateScriptDefinitionGrammarAction($1, $2); */ }
 		| template style { /* $$ = TemplateStyleDefinitionGrammarAction($1, $2); */ }
 		| template script style { /* $$ = TemplateScriptStyleDefinitionGrammarAction($1, $2, $3); */ }
+		| template style script { /* $$ = TemplateStyleScriptDefinitionGrammarAction($1, $2, $3); */ }
 		;
 
 	template: TEMPLATE COLON OPEN_CURLY_BRACKET positioning CLOSE_CURLY_BRACKET { /* $$ = TemplateGrammarAction($4); */ }
+		| TEMPLATE COLON OPEN_CURLY_BRACKET CLOSE_CURLY_BRACKET { /* $$ = TemplateEmptyGrammarAction(); */ }
 		;
 
 	positioning: positioning COMMA positionItem { /* $$ = MultiplePositioningGrammarAction($1, $3); */ }
 		| positionItem { /*$$ = SinglePositionItemGrammarAction($1); */ }
 		;
 
-	positionItem: TOP COLON OPEN_SQUARE_BRACKET elementList CLOSE_SQUARE_BRACKET { /* $$ = TopPositioningGrammarAction($1,$4); */ }
-		| BOTTOM COLON OPEN_SQUARE_BRACKET elementList CLOSE_SQUARE_BRACKET {/* $$ = BottomPositioningGrammarAction($1,$4); */ }
-		| LEFT COLON OPEN_SQUARE_BRACKET elementList CLOSE_SQUARE_BRACKET {/* $$ = LeftPositioningGrammarAction($1,$4); */ }
-		| RIGHT COLON OPEN_SQUARE_BRACKET elementList CLOSE_SQUARE_BRACKET { /* $$ = RightositioningGrammarAction($1,$4); */ }
-		| TOP_RIGHT COLON OPEN_SQUARE_BRACKET elementList CLOSE_SQUARE_BRACKET { /*	$$ = TopRightPositioningGrammarAction($1,$4); */ }
-		| TOP_LEFT COLON OPEN_SQUARE_BRACKET elementList CLOSE_SQUARE_BRACKET {/* $$ = TopLeftPositioningGrammarAction($1,$4); 	*/ }
-		| BOTTOM_RIGHT COLON OPEN_SQUARE_BRACKET elementList CLOSE_SQUARE_BRACKET { /* $$ = BottomRightPositioningGrammarAction($1,$4); */ }
-		| BOTTOM_LEFT COLON OPEN_SQUARE_BRACKET elementList CLOSE_SQUARE_BRACKET { /* $$ = BottomLeftPositioningGrammarAction($1,$4); */ }
-		| CENTER COLON OPEN_SQUARE_BRACKET elementList CLOSE_SQUARE_BRACKET { /* $$ = CenterPositioningGrammarAction($1,$4); */ }
-		| CENTER_BOTTOM COLON OPEN_SQUARE_BRACKET elementList CLOSE_SQUARE_BRACKET {/* $$ = CenterBottomPositioningGrammarAction($1,$4); */ }
-		| CENTER_LEFT COLON OPEN_SQUARE_BRACKET elementList CLOSE_SQUARE_BRACKET { /* $$ = CenterLeftPositioningGrammarAction($1,$4); */ }
-		| CENTER_RIGHT COLON OPEN_SQUARE_BRACKET elementList CLOSE_SQUARE_BRACKET { /* $$ = CenterRightPositioningGrammarAction($1,$4); */ }
-		| CENTER_TOP COLON OPEN_SQUARE_BRACKET elementList CLOSE_SQUARE_BRACKET {/* $$ = CenterTopPositioningGrammarAction($1,$4); */ }
-		| CHILDREN COLON OPEN_SQUARE_BRACKET elementList CLOSE_SQUARE_BRACKET { /* $$ = ChildrenPositioningGrammarAction($1,$4); */ }
+	positionItem: pItem COLON elementList { /* $$ = PositionItemElementListGrammarAction($1, $3); */ }
+		| pItem COLON variable { /* $$ = PositionItemVariableGrammarAction($1, $3); */ }
 		;
 
-	script: SCRIPT COLON OPEN_CURLY_BRACKET CLOSE_CURLY_BRACKET { /* $$ = ScriptGrammarAction(); */ }
+	pItem: 	TOP_RIGHT | TOP_LEFT | BOTTOM_RIGHT | BOTTOM_LEFT | TOP_CENTER | BOTTOM_CENTER | LEFT_CENTER | RIGHT_CENTER | RIGHT | LEFT | TOP | BOTTOM | CENTER | CHILDREN;
+
+	script: SCRIPT COLON JS_CODE  { /* $$ = ScriptGrammarAction(); */ }
 		;
 
-	style: STYLE COLON OPEN_CURLY_BRACKET CLOSE_CURLY_BRACKET {/*  $$ = StyleGrammarAction(); */ }
+	style: STYLE COLON CSS_CODE  {/*  $$ = StyleGrammarAction(); */ }
 		;
 
-	elementList: elementList COMMA element { /* $$ = MultipleElementListGrammarAction($1, $3); */ }
-		| element { /* $$ = OneElementListGrammarAction($1, null); */ }
+	elementList: OPEN_SQUARE_BRACKET elementList COMMA element  CLOSE_SQUARE_BRACKET{ /* $$ = MultipleElementListGrammarAction($2, $4); */ }
+		| OPEN_SQUARE_BRACKET element CLOSE_SQUARE_BRACKET { /* $$ = OneElementListGrammarAction($2, null); */ }
 		;
 	element: STRING { /*$$ = ElementGrammarAction($1); 	*/ }
 		| STRING OPEN_PARENTHESIS argumentList CLOSE_PARENTHESIS { /*$$ = ElementWithArgumentsGrammarAction($1, $3); */ }
 		;
+	variable: STRING { /* $$ = VariableGrammarAction($1); */ }
+		| DOLLAR OPEN_CURLY_BRACKET STRING CLOSE_CURLY_BRACKET { /* $$ = DollarVariableGrammarAction($3); */ }
+		| PROPS DOT STRING { /* $$ = PropVariableGrammarAction($3); */ }
+		| TEXT { /* $$ = StringVariableGrammarAction($1); */ }
+		;
+
 	argumentList: argument { /* $$ = SingleArgumentGrammarAction($1); */ }
 		| argumentList COMMA argument { /* $$ = MultipleArgumentGrammarAction($1, $3); */ }
 		;

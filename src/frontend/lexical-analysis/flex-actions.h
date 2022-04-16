@@ -5,7 +5,8 @@
 #include "../../backend/support/logger.h"
 //#include "../syntactic-analysis/bison-parser.h"
 
-extern tYYSTYPE yylval;
+// ! Quiza sirva para el backend.
+// extern tYYSTYPE yylval;
 /**
  * Se definen los diferentes IDs de cada token disponible para el scanner Flex.
  */
@@ -34,12 +35,14 @@ typedef enum TokenID
 	COMMA,
 	COLON,
 	LINE_COMMENT,
-
+	DOLLAR,
+	DOT,
 	// Tipos de dato.
 	INTEGER,
 	STRING,
 	FLOAT,
 	BOOLEAN,
+	TEXT,
 	// Template positions.
 	RIGHT,
 	LEFT,
@@ -61,11 +64,14 @@ typedef enum TokenID
 
 	// Parts of module
 	MODULE,
+	PROPS,
 	AS,
 	CANVAS,
 	SCRIPT,
 	TEMPLATE,
 	STYLE,
+	CSS_CODE,
+	JS_CODE,
 
 	IMPORT
 
@@ -78,9 +84,43 @@ typedef enum TokenID
  * (a.k.a. DFA), como mecanismo de escaneo y reconocimiento.
  */
 
-TokenID ModulePatternAction(const char *lexeme);
-TokenID CanvasPatternAction(const char *lexeme);
+TokenID OpenParenthesisPatternAction();
+TokenID CloseParenthesisPatternAction();
+TokenID ColonPatternAction();
+TokenID CommentPatternAction();
+TokenID CommaPatternAction();
+TokenID DollarPatternAction();
+TokenID DotPatternAction();
+TokenID TopPositionPatternAction();
+TokenID BottomPositionPatternAction();
+TokenID LeftPositionPatternAction();
+TokenID RightPositionPatternAction();
+TokenID CenterPositionPatternAction();
+TokenID TopRightPositionPatternAction();
+TokenID TopLeftPositionPatternAction();
+TokenID BottomLeftPositionPatternAction();
+TokenID BottomRightPositionPatternAction();
+TokenID BottomCenterPositionPatternAction();
+TokenID TopCenterPositionPatternAction();
+TokenID LeftCenterPositionPatternAction();
+TokenID RightCenterPositionPatternAction();
+TokenID ChildrenPositionPatternAction();
+TokenID OpenCurlyPatternAction();
+TokenID CloseCurlyPatternAction();
+TokenID CloseSquarePatternAction();
+TokenID OpenSquarePatternAction();
+TokenID ImportPatternAction();
+TokenID PropsPatternAction();
+TokenID AsPatternAction();
+TokenID TemplatePatternAction();
+TokenID ScriptPatternAction();
+TokenID JsCodePatternAction(char *lexeme);
+TokenID StylePatternAction();
+TokenID CssCodePatternAction(char *lexeme);
+TokenID ModulePatternAction();
+TokenID CanvasPatternAction();
 TokenID StringPatternAction(char *lexeme);
+TokenID TextPatternAction(char *lexeme);
 TokenID FloatPatternAction(const char *lexeme);
 TokenID BooleanPatternAction(const char *lexeme);
 

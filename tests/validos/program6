@@ -1,0 +1,23 @@
+module miElemento as Canvas {
+    Template: {
+        top:[a]
+    }
+}
+
+module a {
+    Template: {
+        top: [b]
+    }
+}
+
+module b {
+    Template: {
+        top: [c]
+    }
+}
+
+module c {
+    Template: {
+        top: "Hola!"
+    }
+}

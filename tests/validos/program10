@@ -1,0 +1,18 @@
+module miElemento as Canvas {
+    Template: {
+        top:"Top",
+        right: "Right",
+        left: "Left",
+        bottom: "Bottom",
+        topRight: "topRight",
+        topLeft: "topLeft",
+        bottomRight: "bottomRight",
+        bottomLeft: "bottomLeft",
+        center: "Center",
+        topCenter: "topCenter",
+        bottomCenter: "bottomCenter",
+        rightCenter: "rightCenter",
+        leftCenter: "leftCenter",
+        children: "Children"
+    }
+}

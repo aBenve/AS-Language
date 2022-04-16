@@ -1,0 +1,11 @@
+module miElemento as Canvas {
+    Template: {
+        top:${miVariable}
+    }
+    Script: js{
+        let count = 0
+        let miVariable
+        if(count < 0)
+            miVariable = "negativo"
+    js}
+}

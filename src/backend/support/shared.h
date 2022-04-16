@@ -9,8 +9,8 @@ extern FILE *yyin;
 extern FILE *yyout;
 
 // Variable global que contiene el número escaneado.
-// TODO COMENTE LA LINEA DE ABAJO
-// extern int yylval;
+// ! Como no esta el UNION en el bison, yylval por defecto es int.
+extern int yylval;
 
 // Variable global que contiene el número de la línea analizada.
 extern int yylineno;
@@ -54,6 +54,9 @@ typedef struct
 // El estado se define e inicializa en el archivo "main.c":
 extern CompilerState state;
 
+// Estructuras para el backend.
+
+/*
 typedef struct tArgument
 {
 	char *name;
@@ -136,5 +139,5 @@ typedef union tYYSTYPE
 	boolean boolean;
 	int token;
 } tYYSTYPE;
-
+*/
 #endif

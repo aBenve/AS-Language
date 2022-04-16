@@ -1,0 +1,6 @@
+module Canvas {
+    Template: {
+        top:"Top",
+        top:"Top x2",
+    }
+}

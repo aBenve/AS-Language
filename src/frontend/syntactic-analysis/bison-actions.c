@@ -21,6 +21,10 @@ void yyerror(const char *string)
 	}
 	LogErrorRaw("\n\n");
 }
+
+// ! Funciones del backend.
+/*
+
 // Program.
 tModule *ProgramModulesGrammarAction(tModule *module)
 {
@@ -115,6 +119,7 @@ tDefinition *TemplateDefinitionGrammarAction(tTemplate *template);
 tDefinition *TemplateScriptDefinitionGrammarAction(tTemplate *template, tScript *script);
 tDefinition *TemplateStyleDefinitionGrammarAction(tTemplate *template, tStyle *style);
 tDefinition *TemplateScriptStyleDefinitionGrammarAction(tTemplate *template, tScript *script, tStyle *style);
+tDefinition *TemplateStyleScriptDefinitionGrammarAction(tTemplate *template, tStyle *style, tScript *script);
 // Template.
 tTemplate *TemplateGrammarAction(tPositionItem *positions);
 // positioning.
@@ -164,3 +169,4 @@ tArgument *OnlyStringArgumentGrammarAction(const char *value);
 tArgument *OnlyIntegerArgumentGrammarAction(const int value);
 tArgument *OnlyFloatArgumentGrammarAction(const float value);
 tArgument *OnlyBooleanArgumentGrammarAction(const boolean value);
+*/

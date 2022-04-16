@@ -21,55 +21,67 @@ float           [0-9]*\.[0-9]*
 boolean          (true|false)
 endline			\n
 whitespace		[ \f\n\r\t\v]
+
+jsCode          js\{(.|\n)*js\}
+
+cssCode         css\{(.|\n)*css\}
+
 word            [a-zA-Z][a-zA-Z0-9_]*
+text            \"(.*?)\"
 
 %%
 
-"("											{ return OPEN_PARENTHESIS; }
-")"											{ return CLOSE_PARENTHESIS; }
+"("											{ return OpenParenthesisPatternAction(); }
+")"											{ return CloseParenthesisPatternAction(); }
 
-":"                                            { return COLON; }
-"~"                                            { return LINE_COMMENT; }
-","                                            { return COMMA; }
+":"                                            { return ColonPatternAction(); }
+"~"                                            { return CommentPatternAction(); }
+","                                            { return CommaPatternAction(); }
+"$"                                            { return DollarPatternAction(); }
+"."                                            { return DotPatternAction(); }
 
-"top"											{ return TOP; }
-"bottom"										{ return BOTTOM; }
-"left"											{ return LEFT; }
-"right"											{ return RIGHT; }
-"center"										{ return CENTER; }
+"top"											{ return TopPositionPatternAction(); }
+"bottom"										{ return BottomPositionPatternAction(); }
+"left"											{ return LeftPositionPatternAction(); }
+"right"											{ return RightPositionPatternAction(); }
+"center"										{ return CenterPositionPatternAction(); }
 
-"topRight"										{ return TOP_RIGHT; }
-"bottomLeft"									{ return BOTTOM_LEFT; }
-"bottomRight"									{ return BOTTOM_RIGHT; }
-"topLeft"										{ return TOP_LEFT; }
+"topRight"										{ return TopRightPositionPatternAction(); }
+"bottomLeft"									{ return BottomLeftPositionPatternAction(); }
+"bottomRight"									{ return BottomRightPositionPatternAction(); }
+"topLeft"										{ return TopLeftPositionPatternAction(); }
 
-"topCenter"										{ return TOP_CENTER; }
-"bottomCenter"									{ return BOTTOM_CENTER; }
-"leftCenter"									{ return LEFT_CENTER; }
-"rightCenter"									{ return RIGHT_CENTER; }
+"topCenter"										{ return TopCenterPositionPatternAction(); }
+"bottomCenter"									{ return BottomCenterPositionPatternAction(); }
+"leftCenter"									{ return LeftCenterPositionPatternAction(); }
+"rightCenter"									{ return RightCenterPositionPatternAction(); }
 
-"children"											{ return CHILDREN; }
+"children"											{ return ChildrenPositionPatternAction(); }
 
-"{"											{ return OPEN_CURLY_BRACKET; }
-"}"											{ return CLOSE_CURLY_BRACKET; }
+"{"											{ return OpenCurlyPatternAction(); }
+"}"											{ return CloseCurlyPatternAction(); }
 
-"["											{ return OPEN_SQUARE_BRACKET; }
-"]"											{ return CLOSE_SQUARE_BRACKET; }
+"["											{ return OpenSquarePatternAction(); }
+"]"											{ return CloseSquarePatternAction(); }
 
-"import"                                            { return IMPORT; }
+"import"                                            { return ImportPatternAction(); }
+"props"                                            { return PropsPatternAction(); }
 
-"module"                                        { return ModulePatternAction(yytext); }
-"Canvas"                                        { return CanvasPatternAction(yytext); }
-"as"                                            { return AS; }
-"Template"                                      { return TEMPLATE; }
-"Script"                                        { return SCRIPT; }
-"Style"                                         { return STYLE; }
+"module"                                        { return ModulePatternAction(); }
+"Canvas"                                        { return CanvasPatternAction(); }
+"as"                                            { return AsPatternAction(); }
+"Template"                                      { return TemplatePatternAction(); }
+"Script"                                        { return ScriptPatternAction(); }
+"Style"                                         { return StylePatternAction(); }
+
+{cssCode}                                       { return CssCodePatternAction(yytext); }
+{jsCode}                                        { return JsCodePatternAction(yytext); }
 
 {boolean}                                      { return BooleanPatternAction(yytext); }
 
+{text}                                          { return TextPatternAction(yytext); }
 {word}                                          { return StringPatternAction(yytext); }
 {float}                                        { return FloatPatternAction(yytext); }
-
 
 {digit}+									{ return IntegerPatternAction(yytext); }
 

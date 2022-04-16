@@ -1,0 +1,6 @@
+module miElemento as Canvas {
+    Template: {
+        top:"Mi super elemento"
+    }
+    Style:{}
+}

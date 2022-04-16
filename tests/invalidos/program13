@@ -1,0 +1,5 @@
+mooodule canvas {
+    Template: {
+        top:"Top",
+    }
+}

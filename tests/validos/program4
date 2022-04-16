@@ -1,0 +1,8 @@
+module miElemento as Canvas {
+    Template: {
+        top:${myList}
+    }
+    Script:{
+        let myList = [Element("elemento 1"), Element("elemento 2")]
+    }
+}

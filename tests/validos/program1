@@ -1,0 +1,25 @@
+module Canvas {
+    Template: {
+        rightCenter:[a],
+        center:[b],
+        leftCenter:[c]
+    }
+}
+
+module a {
+    Template:{
+        children:"soy a"
+    }
+}
+
+module b{
+    Template:{
+        children:"soy b"
+    }
+}
+
+module c {
+    Template:{
+        children:"soy c"
+    }
+}

@@ -1,0 +1,5 @@
+module miElemento{
+    Template: {
+        top:"Top"
+    }
+}
