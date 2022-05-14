@@ -16,6 +16,8 @@
 	tCanvas * canvas;
 	tArgument * argument;
 	tArgument ** argumentList;
+	tVariable * variable;
+	tConstant * constant;
 	tElement * element;
 	tElement ** elementList;
 	tPositionItem * positionItem;
@@ -162,7 +164,7 @@
 	modules: canvas { /* $$ = CanvasModuleGrammarAction($1); */ }
 		| canvas componentList { /* $$ = MultipleComponentModuleGrammarAction($1, $2); */ }
 		| componentAsCanvas { /* $$ = ComponentAsCanvasModuleGrammarAction($1);  */ }
-		| componentAsCanvas componentList { /* $$ = MultipleComponentAsCancasModuleGrammarAction($1, $2); */  }
+		| componentAsCanvas componentList { /* $$ = MultipleComponentAsCanvasModuleGrammarAction($1, $2); */  }
 		;
 
 	componentList: componentList component { /* $$ = MultipleComponentListGrammarAction($1, $2); */  }
@@ -195,9 +197,10 @@
 
 	positionItem: pItem COLON elementList { /* $$ = PositionItemElementListGrammarAction($1, $3); */ }
 		| pItem COLON variable { /* $$ = PositionItemVariableGrammarAction($1, $3); */ }
+		| pItem COLON constant { /* $$ = PositionItemConstantGrammarAction($1, $3); */ }
 		;
 
-	pItem: 	TOP_RIGHT | TOP_LEFT | BOTTOM_RIGHT | BOTTOM_LEFT | TOP_CENTER | BOTTOM_CENTER | LEFT_CENTER | RIGHT_CENTER | RIGHT | LEFT | TOP | BOTTOM | CENTER | CHILDREN;
+	pItem: 	TOP_RIGHT | TOP_LEFT | BOTTOM_RIGHT | BOTTOM_LEFT | TOP_CENTER | BOTTOM_CENTER | LEFT_CENTER | RIGHT_CENTER | RIGHT | LEFT | TOP | BOTTOM | CENTER | CHILDREN ;
 
 	script: SCRIPT COLON JS_CODE  { /* $$ = ScriptGrammarAction(); */ }
 		;
@@ -206,7 +209,7 @@
 		;
 
 	elementList: OPEN_SQUARE_BRACKET elementList COMMA element  CLOSE_SQUARE_BRACKET{ /* $$ = MultipleElementListGrammarAction($2, $4); */ }
-		| OPEN_SQUARE_BRACKET element CLOSE_SQUARE_BRACKET { /* $$ = OneElementListGrammarAction($2, null); */ }
+		| OPEN_SQUARE_BRACKET element CLOSE_SQUARE_BRACKET { /* $$ = OneElementListGrammarAction($2); */ }
 		;
 	element: STRING { /*$$ = ElementGrammarAction($1); 	*/ }
 		| STRING OPEN_PARENTHESIS argumentList CLOSE_PARENTHESIS { /*$$ = ElementWithArgumentsGrammarAction($1, $3); */ }
@@ -214,7 +217,9 @@
 	variable: STRING { /* $$ = VariableGrammarAction($1); */ }
 		| DOLLAR OPEN_CURLY_BRACKET STRING CLOSE_CURLY_BRACKET { /* $$ = DollarVariableGrammarAction($3); */ }
 		| PROPS DOT STRING { /* $$ = PropVariableGrammarAction($3); */ }
-		| TEXT { /* $$ = StringVariableGrammarAction($1); */ }
+		;
+
+	constant: TEXT { /* $$ = ConstantGrammarAction($1); */ }
 		;
 
 	argumentList: argument { /* $$ = SingleArgumentGrammarAction($1); */ }
