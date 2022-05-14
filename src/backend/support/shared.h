@@ -10,8 +10,8 @@ extern FILE *yyout;
 
 // Variable global que contiene el número escaneado.
 // ! Como no esta el UNION en el bison, yylval por defecto es int.
-extern int yylval;
-
+// extern int yylval;
+// extern YYSTYPE yylval;
 // Variable global que contiene el número de la línea analizada.
 extern int yylineno;
 
@@ -34,43 +34,34 @@ typedef enum
 	true = 1
 } boolean;
 
-// Estado global de toda la aplicación.
-typedef struct
-{
-
-	// Indica si la compilación tuvo problemas hasta el momento:
-	boolean succeed;
-
-	// Indica el resultado de la compilación:
-	int result;
-
-	// Agregar una pila para almacenar tokens/nodos.
-	// Agregar un nodo hacia la raíz del árbol de sintaxis abstracta.
-	// Agregar una tabla de símbolos.
-	// ...
-
-} CompilerState;
-
-// El estado se define e inicializa en el archivo "main.c":
-extern CompilerState state;
-
-// Estructuras para el backend.
-
-/*
 typedef struct tArgument
 {
 	char *name;
 	void *value;
 } tArgument;
+
+typedef struct tVariable
+{
+	char *name;
+	void *value;
+} tVariable;
+
+typedef struct tConstant
+{
+	char *name;
+	void *value;
+} tConstant;
 typedef struct tElement
 {
 	char *name;
-	char **tArgument;
+	tArgument **arguments;
 } tElement;
 typedef struct tPositionItem
 {
 	char *name;
-	char **tElement;
+	tVariable *variable; // Solo puede tener 1 de estos 3 valores.
+	tConstant *constant;
+	tElement **elements;
 } tPositionItem;
 
 typedef struct tStyle
@@ -116,28 +107,26 @@ typedef struct tModule
 	tComponent **components;
 } tModule;
 
-typedef union tYYSTYPE
+// Estado global de toda la aplicación.
+typedef struct
 {
-	tComponent *component;
-	tComponent **componentList;
-	tModule *modules;
-	tComponentAsCanvas *componentAsCanvas;
-	tDefinition *definition;
-	tCanvas *canvas;
-	tArgument *argument;
-	tArgument **argumentList;
-	tElement *element;
-	tElement **elementList;
-	tPositionItem *positionItem;
-	tPositionItem **positioning;
-	tTemplate *template;
-	tStyle *style;
-	tScript *script;
-	char *string;
-	int integer;
-	double floatNumber;
-	boolean boolean;
-	int token;
-} tYYSTYPE;
-*/
+
+	// Indica si la compilación tuvo problemas hasta el momento:
+	boolean succeed;
+
+	// Indica el resultado de la compilación:
+	tModule *result;
+
+	// Agregar una pila para almacenar tokens/nodos.
+	// Agregar un nodo hacia la raíz del árbol de sintaxis abstracta.
+	// Agregar una tabla de símbolos.
+	// ...
+
+} CompilerState;
+
+// El estado se define e inicializa en el archivo "main.c":
+extern CompilerState state;
+
+// Estructuras para el backend.
+
 #endif

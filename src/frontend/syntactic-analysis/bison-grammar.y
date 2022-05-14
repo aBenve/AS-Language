@@ -4,8 +4,6 @@
 
 %}
 
-/*
-* Util para el backend.
 
 %union{
 	tComponent * component;
@@ -46,6 +44,8 @@
 %type <definition> definition
 %type <element> element 
 %type <elementList> elementList
+%type <variable> variable
+%type <constant> constant
 %type <argumentList> argumentList
 %type <argument> argument
 
@@ -61,11 +61,14 @@
 %token <token> COMMA
 %token <token> COLON
 %token <token> LINE_COMMENT
+%token <token> DOLLAR
+%token <token> DOT
 
 %token <integer> INTEGER
 %token <string> STRING
 %token <floatNumber> FLOAT
 %token <boolean> BOOLEAN
+%token <string> TEXT
 
 %token <token> RIGHT
 %token <token> LEFT
@@ -87,17 +90,19 @@
 
 
 %token <token> MODULE
+%token <token> PROPS
 %token <token> AS
 %token <token> CANVAS
 %token <token> SCRIPT
 %token <token> TEMPLATE
 %token <token> STYLE
-
+%token <token> CSS_CODE
+%token <token> JS_CODE
 %token <token> IMPORT
 
-*/
 
 
+
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
@@ -106,7 +111,7 @@
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 
-
+/*
 %token OPEN_PARENTHESIS
 %token CLOSE_PARENTHESIS
 %token OPEN_CURLY_BRACKET
@@ -155,10 +160,10 @@
 %token JS_CODE
 
 %token IMPORT
-
+*/
 %%
 
-	program: modules { printf("ProgramGrammarAction\n"); state.succeed = true;  /* $$ = ProgramModulesGrammarAction($1); */}
+	program: modules { printf("ProgramGrammarAction !!\n"); state.succeed = true;  state.result = ProgramModulesGrammarAction($1);}
 		;
 	
 	modules: canvas { /* $$ = CanvasModuleGrammarAction($1); */ }

@@ -13,7 +13,6 @@
 // -----------------------------------------------------------------------------
 
 // Funciones para el backend.
-/*
 
 // Program.
 tModule *ProgramModulesGrammarAction(tModule *module);
@@ -21,9 +20,8 @@ tModule *ProgramModulesGrammarAction(tModule *module);
 // Module.
 tModule *CanvasModuleGrammarAction(tCanvas *canvas);
 tModule *MultipleComponentModuleGrammarAction(tCanvas *canvas, tComponent **components);
-
-tModule *ComponentAsCanvasModuleGrammarAction(tComponentAsCanvas *canvas);
-tModule *MultipleComponentAsCancasModuleGrammarAction(tComponentAsCanvas *canvas, tComponent **components);
+tModule *ComponentAsCanvasModuleGrammarAction(tComponentAsCanvas *compAsCanvas);
+tModule **MultipleComponentAsCanvasModuleGrammarAction(tComponentAsCanvas *compAsCanvas, tComponent **components);
 
 // ComponentList.
 tComponent **MultipleComponentListGrammarAction(tComponent **prevComponents, tComponent *component);
@@ -31,10 +29,11 @@ tComponent **SingleComponentListGrammarAction(tComponent *component);
 
 // Component.
 tComponent *ComponentGrammarAction(char *name, tDefinition *definition);
+// ComponentAsCanvas.
+tComponentAsCanvas *ComponentAsCanvasGrammarAction(char *name, tDefinition *definition);
 
 // Canvas.
 tCanvas *CanvasGrammarAction(tDefinition *definition);
-tComponentAsCanvas *ComponentAsCanvasGrammarAction(char *name, tDefinition *definition);
 
 // Definition.
 tDefinition *TemplateDefinitionGrammarAction(tTemplate *template);
@@ -44,25 +43,17 @@ tDefinition *TemplateScriptStyleDefinitionGrammarAction(tTemplate *template, tSc
 tDefinition *TemplateStyleScriptDefinitionGrammarAction(tTemplate *template, tStyle *style, tScript *script);
 // Template.
 tTemplate *TemplateGrammarAction(tPositionItem *positions);
+tTemplate *TemplateEmptyGrammarAction();
 // positioning.
 tPositionItem *SinglePositionItemGrammarAction(tPositionItem *element);
 tPositionItem **MultiplePositioningGrammarAction(tPositionItem **prevItems, tPositionItem *value);
 
 // positionItem.
-tPositionItem *TopPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *BottomPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *LeftPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *RightositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *TopRightPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *TopLeftPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *BottomRightPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *BottomLeftPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *CenterPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *CenterBottomPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *CenterLeftPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *CenterRightPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *CenterTopPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *ChildrenPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *PositionItemElementListGrammarAction(const char *name, tElement **elementList);
+tPositionItem *PositionItemVariableGrammarAction(const char *name, tVariable *variable);
+tPositionItem *PositionItemConstantGrammarAction(const char *name, tConstant *constant);
+
+// pItem
 
 // Style.
 void StyleGrammarAction();
@@ -76,6 +67,8 @@ tElement *OneElementListGrammarAction(tElement *element);
 // Element.
 tElement *ElementGrammarAction(const char *name);
 tElement *ElementWithArgumentsGrammarAction(const char *name, tArgument **arguments);
+
+// Variable
 
 // ArgumentList.
 tArgument *SingleArgumentGrammarAction(tArgument *value);
@@ -92,6 +85,78 @@ tArgument *OnlyIntegerArgumentGrammarAction(const int value);
 tArgument *OnlyFloatArgumentGrammarAction(const float value);
 tArgument *OnlyBooleanArgumentGrammarAction(const boolean value);
 
+/*
 
+
+void ProgramModulesGrammarAction();
+
+// Module.
+void CanvasModuleGrammarAction();
+void MultipleComponentModuleGrammarAction();
+void ComponentAsCanvasModuleGrammarAction();
+void MultipleComponentAsCanvasModuleGrammarAction();
+
+// ComponentList.
+void MultipleComponentListGrammarAction();
+void SingleComponentListGrammarAction();
+
+// Component.
+void ComponentGrammarAction();
+// ComponentAsCanvas.
+void ComponentAsCanvasGrammarAction();
+
+// Canvas.
+void CanvasGrammarAction();
+
+// Definition.
+void TemplateDefinitionGrammarAction();
+void TemplateScriptDefinitionGrammarAction();
+void TemplateStyleDefinitionGrammarAction();
+void TemplateScriptStyleDefinitionGrammarAction();
+void TemplateStyleScriptDefinitionGrammarAction();
+// Template.
+void TemplateGrammarAction();
+void TemplateEmptyGrammarAction();
+// positioning.
+void SinglePositionItemGrammarAction();
+void MultiplePositioningGrammarAction();
+
+// positionItem.
+void PositionItemElementListGrammarAction();
+void PositionItemVariableGrammarAction();
+void PositionItemConstantGrammarAction();
+
+// pItem
+
+// Style.
+void StyleGrammarAction();
+
+// Script.
+void ScriptGrammarAction();
+
+// ElementList.
+void MultipleElementListGrammarAction();
+void OneElementListGrammarAction();
+// Element.
+void ElementGrammarAction();
+void ElementWithArgumentsGrammarAction();
+
+// Variable
+
+// ArgumentList.
+void SingleArgumentGrammarAction();
+void MultipleArgumentGrammarAction();
+
+// Argument.
+void StringArgumentGrammarAction();
+void IntegerArgumentGrammarAction();
+void FloatArgumentGrammarAction();
+void BooleanArgumentGrammarAction();
+void ConcatenatedArgumentGrammarAction();
+void OnlyStringArgumentGrammarAction();
+void OnlyIntegerArgumentGrammarAction();
+void OnlyFloatArgumentGrammarAction();
+void OnlyBooleanArgumentGrammarAction();
 */
+
 #endif

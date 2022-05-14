@@ -1,6 +1,7 @@
 module miElemento as Canvas {
     Template: {
-        top:[a]
+        top:[a],
+        bottom: props.hola
     }
 }
 

@@ -1,221 +1,221 @@
 //#include "../../backend/support/logger.h"
 #include "flex-actions.h"
-
 #include <stdlib.h>
 #include <string.h>
+
 /**
  * Implementación de "flex-rules.h".
  */
 
-TokenID OpenParenthesisPatternAction()
+yytoken_kind_t OpenParenthesisPatternAction()
 {
 	LogDebug("OpenParenthesisPatternAction");
 	return OPEN_PARENTHESIS;
 }
-TokenID CloseParenthesisPatternAction()
+yytoken_kind_t CloseParenthesisPatternAction()
 {
 	LogDebug("CloseParenthesisPatternAction");
 	return CLOSE_PARENTHESIS;
 }
-TokenID ColonPatternAction()
+yytoken_kind_t ColonPatternAction()
 {
 	LogDebug("ColonPatternAction");
 	return COLON;
 }
-TokenID CommentPatternAction()
+yytoken_kind_t CommentPatternAction()
 {
 	LogDebug("CommentPatternAction");
 	return LINE_COMMENT;
 }
-TokenID CommaPatternAction()
+yytoken_kind_t CommaPatternAction()
 {
 	LogDebug("CommaPatternAction");
 	return COMMA;
 }
-TokenID DollarPatternAction()
+yytoken_kind_t DollarPatternAction()
 {
 	LogDebug("DollarPatternAction");
 	return DOLLAR;
 }
-TokenID DotPatternAction()
+yytoken_kind_t DotPatternAction()
 {
 	LogDebug("DotPatternAction");
 	return DOT;
 }
 
-TokenID TopPositionPatternAction()
+yytoken_kind_t TopPositionPatternAction()
 {
 	LogDebug("TopPositionPatternAction");
 	return TOP;
 }
-TokenID BottomPositionPatternAction()
+yytoken_kind_t BottomPositionPatternAction()
 {
 	LogDebug("BottomPositionPatternAction");
 	return BOTTOM;
 }
-TokenID LeftPositionPatternAction()
+yytoken_kind_t LeftPositionPatternAction()
 {
 	LogDebug("LeftPositionPatternAction");
 	return LEFT;
 }
-TokenID RightPositionPatternAction()
+yytoken_kind_t RightPositionPatternAction()
 {
 	LogDebug("RightPositionPatternAction");
 	return RIGHT;
 }
-TokenID CenterPositionPatternAction()
+yytoken_kind_t CenterPositionPatternAction()
 {
 	LogDebug("CenterPositionPatternAction");
 	return CENTER;
 }
-TokenID TopRightPositionPatternAction()
+yytoken_kind_t TopRightPositionPatternAction()
 {
 	LogDebug("TopRightPositionPatternAction");
 	return TOP_RIGHT;
 }
-TokenID TopLeftPositionPatternAction()
+yytoken_kind_t TopLeftPositionPatternAction()
 {
 	LogDebug("TopLeftPositionPatternAction");
 	return TOP_LEFT;
 }
-TokenID BottomLeftPositionPatternAction()
+yytoken_kind_t BottomLeftPositionPatternAction()
 {
 	LogDebug("BottomLeftPositionPatternAction");
 	return BOTTOM_LEFT;
 }
-TokenID BottomRightPositionPatternAction()
+yytoken_kind_t BottomRightPositionPatternAction()
 {
 	LogDebug("BottomRightPositionPatternAction");
 	return BOTTOM_RIGHT;
 }
-TokenID BottomCenterPositionPatternAction()
+yytoken_kind_t BottomCenterPositionPatternAction()
 {
 	LogDebug("BottomCenterPositionPatternAction");
 	return BOTTOM_CENTER;
 }
-TokenID TopCenterPositionPatternAction()
+yytoken_kind_t TopCenterPositionPatternAction()
 {
 	LogDebug("TopCenterPositionPatternAction");
 	return TOP_CENTER;
 }
-TokenID LeftCenterPositionPatternAction()
+yytoken_kind_t LeftCenterPositionPatternAction()
 {
 	LogDebug("LeftCenterPositionPatternAction");
 	return LEFT_CENTER;
 }
-TokenID RightCenterPositionPatternAction()
+yytoken_kind_t RightCenterPositionPatternAction()
 {
 	LogDebug("RightCenterPositionPatternAction");
 	return RIGHT_CENTER;
 }
-TokenID ChildrenPositionPatternAction()
+yytoken_kind_t ChildrenPositionPatternAction()
 {
 	LogDebug("ChildrenPositionPatternAction");
 	return CHILDREN;
 }
-TokenID OpenCurlyPatternAction()
+yytoken_kind_t OpenCurlyPatternAction()
 {
 	LogDebug("OpenCurlyPatternAction");
 	return OPEN_CURLY_BRACKET;
 }
-TokenID CloseCurlyPatternAction()
+yytoken_kind_t CloseCurlyPatternAction()
 {
 	LogDebug("CloseCurlyPatternAction");
 	return CLOSE_CURLY_BRACKET;
 }
-TokenID CloseSquarePatternAction()
+yytoken_kind_t CloseSquarePatternAction()
 {
 	LogDebug("CloseSquarePatternAction");
 	return CLOSE_SQUARE_BRACKET;
 }
-TokenID OpenSquarePatternAction()
+yytoken_kind_t OpenSquarePatternAction()
 {
 	LogDebug("OpenSquarePatternAction");
 	return OPEN_SQUARE_BRACKET;
 }
-TokenID ImportPatternAction()
+yytoken_kind_t ImportPatternAction()
 {
 	LogDebug("ImportPatternAction");
 	return IMPORT;
 }
-TokenID AsPatternAction()
+yytoken_kind_t AsPatternAction()
 {
 	LogDebug("AsPatternAction");
 	return AS;
 }
-TokenID TemplatePatternAction()
+yytoken_kind_t TemplatePatternAction()
 {
 	LogDebug("TemplatePatternAction");
 	return TEMPLATE;
 }
-TokenID ScriptPatternAction()
+yytoken_kind_t ScriptPatternAction()
 {
 	LogDebug("ScriptPatternAction");
 	return SCRIPT;
 }
-TokenID JsCodePatternAction(char *lexeme)
+yytoken_kind_t JsCodePatternAction(char *lexeme)
 {
 	LogDebug("JsCodePatternAction: %s", lexeme);
 	return JS_CODE;
 }
-TokenID CssCodePatternAction(char *lexeme)
+yytoken_kind_t CssCodePatternAction(char *lexeme)
 {
 	LogDebug("CssCodePatternAction: %s", lexeme);
 	return CSS_CODE;
 }
-TokenID StylePatternAction()
+yytoken_kind_t StylePatternAction()
 {
 	LogDebug("StylePatternAction");
 	return STYLE;
 }
-TokenID CanvasPatternAction()
+yytoken_kind_t CanvasPatternAction()
 {
 	LogDebug("CanvasPatternAction");
 	return CANVAS;
 }
-TokenID ModulePatternAction()
+yytoken_kind_t ModulePatternAction()
 {
 
 	LogDebug("ModulePatternAction");
 	return MODULE;
 }
-TokenID PropsPatternAction()
+yytoken_kind_t PropsPatternAction()
 {
 	LogDebug("PropsPatternAction");
 	return PROPS;
 }
 
-TokenID StringPatternAction(char *lexeme)
+yytoken_kind_t StringPatternAction(char *lexeme)
 {
 	LogDebug("StringPatternAction: '%s'.", lexeme);
-	// yylval.string = lexeme;
+	yylval.string = lexeme;
 	return STRING;
 }
-TokenID TextPatternAction(char *lexeme)
+yytoken_kind_t TextPatternAction(char *lexeme)
 {
 	LogDebug("TextPatternAction: '%s'.", lexeme);
-	// yylval.string = lexeme;
+	yylval.string = lexeme;
 	return TEXT;
 }
 
-TokenID FloatPatternAction(const char *lexeme)
+yytoken_kind_t FloatPatternAction(const char *lexeme)
 {
 	LogDebug("FloatPatternAction: '%s'.", lexeme);
-	// yylval.floatNumber = atof(lexeme);
+	yylval.floatNumber = atof(lexeme);
 	return FLOAT;
 }
 
-TokenID BooleanPatternAction(const char *lexeme)
+yytoken_kind_t BooleanPatternAction(const char *lexeme)
 {
 	LogDebug("BooleanPatternAction: '%s'.", lexeme);
-	// yylval.boolean = (strcmp(lexeme, "true") == 0);
+	yylval.boolean = (strcmp(lexeme, "true") == 0);
 	return BOOLEAN;
 }
 
-TokenID IntegerPatternAction(const char *lexeme)
+yytoken_kind_t IntegerPatternAction(const char *lexeme)
 {
 	LogDebug("IntegerPatternAction: '%s'.", lexeme);
-	// yylval.integer = atoi(lexeme);
+	yylval.integer = atoi(lexeme);
 	return INTEGER;
 }
 
@@ -224,7 +224,7 @@ void IgnoredPatternAction(const char *lexeme)
 	LogDebug("IgnoredPatternAction: '%s'.", lexeme);
 }
 
-TokenID UnknownPatternAction(const char *lexeme)
+yytoken_kind_t UnknownPatternAction(const char *lexeme)
 {
 	LogDebug("UnknownPatternAction: '%s'.", lexeme);
 	return YYUNDEF;

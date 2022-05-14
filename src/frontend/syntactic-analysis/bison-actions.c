@@ -23,12 +23,11 @@ void yyerror(const char *string)
 }
 
 // ! Funciones del backend.
-/*
 
 // Program.
 tModule *ProgramModulesGrammarAction(tModule *module)
 {
-	LogDebug("ProgramModulesGrammarAction: '%s'.", module->canvas->name == NULL ? "Canvas" : module->canvas->name);
+	// LogDebug("ProgramModulesGrammarAction: '%s'.", module->canvas->name == NULL ? "Canvas" : module->canvas->name);
 	return module;
 }
 
@@ -105,6 +104,8 @@ tCanvas *CanvasGrammarAction(tDefinition *definition)
 	canvas->definition = definition;
 	return canvas;
 }
+
+// ComponentAsCanvas.
 tComponentAsCanvas *ComponentAsCanvasGrammarAction(char *name, tDefinition *definition)
 {
 	LogDebug("ComponentAsCanvasGrammarAction: '%s'.", name);
@@ -127,20 +128,9 @@ tPositionItem *SinglePositionItemGrammarAction(tPositionItem *element);
 tPositionItem **MultiplePositioningGrammarAction(tPositionItem **prevItems, tPositionItem *value);
 
 // positionItem.
-tPositionItem *TopPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *BottomPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *LeftPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *RightositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *TopRightPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *TopLeftPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *BottomRightPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *BottomLeftPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *CenterPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *CenterBottomPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *CenterLeftPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *CenterRightPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *CenterTopPositioningGrammarAction(const char *name, tElement *element);
-tPositionItem *ChildrenPositioningGrammarAction(const char *name, tElement *element);
+tPositionItem *PositionItemElementListGrammarAction(const char *name, tElement **elementList);
+tPositionItem *PositionItemVariableGrammarAction(const char *name, tVariable *variable);
+tPositionItem *PositionItemConstantGrammarAction(const char *name, tConstant *constant);
 
 // Style.
 void StyleGrammarAction();
@@ -169,4 +159,3 @@ tArgument *OnlyStringArgumentGrammarAction(const char *value);
 tArgument *OnlyIntegerArgumentGrammarAction(const int value);
 tArgument *OnlyFloatArgumentGrammarAction(const float value);
 tArgument *OnlyBooleanArgumentGrammarAction(const boolean value);
-*/

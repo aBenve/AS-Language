@@ -2,7 +2,7 @@ module miElemento as Canvas {
     Template: {
         top:${myList}
     }
-    Script:{
+    Script:js{
         let myList = [Element("elemento 1"), Element("elemento 2")]
-    }
+    js}
 }
