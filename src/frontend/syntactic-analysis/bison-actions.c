@@ -5,6 +5,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define VARIABLE_TYPE_DOLLAR 0
+#define VARIABLE_TYPE_PROP 1
 /**
  * Implementación de "bison-grammar.h".
  */
@@ -27,14 +29,14 @@ void yyerror(const char *string)
 // Program.
 tModule *ProgramModulesGrammarAction(tModule *module)
 {
-	// LogDebug("ProgramModulesGrammarAction: '%s'.", module->canvas->name == NULL ? "Canvas" : module->canvas->name);
+	// LogInfo("ProgramModulesGrammarAction: '%s'.", module->canvas->name == NULL ? "Canvas" : module->canvas->name);
 	return module;
 }
 
 // Module.
 tModule *CanvasModuleGrammarAction(tCanvas *canvas)
 {
-	LogDebug("CanvasModuleGrammarAction: Canvas.");
+	LogInfo("CanvasModuleGrammarAction: Canvas.");
 	tModule *module = (tModule *)malloc(sizeof(tModule));
 	tComponentAsCanvas *compAsCanvas = (tComponentAsCanvas *)malloc(sizeof(tComponentAsCanvas));
 	compAsCanvas->name = NULL;
@@ -44,7 +46,7 @@ tModule *CanvasModuleGrammarAction(tCanvas *canvas)
 }
 tModule *MultipleComponentModuleGrammarAction(tCanvas *canvas, tComponent **components)
 {
-	LogDebug("MultipleComponentModuleGrammarAction: ", "Canvas");
+	LogInfo("MultipleComponentModuleGrammarAction: ", "Canvas");
 	tModule *module = malloc(sizeof(tModule));
 	tComponentAsCanvas *compAsCanvas = (tComponentAsCanvas *)malloc(sizeof(tComponentAsCanvas));
 	compAsCanvas->name = NULL;
@@ -55,14 +57,14 @@ tModule *MultipleComponentModuleGrammarAction(tCanvas *canvas, tComponent **comp
 }
 tModule *ComponentAsCanvasModuleGrammarAction(tComponentAsCanvas *compAsCanvas)
 {
-	LogDebug("MultipleComponentModuleGrammarAction: '%s'.", compAsCanvas->name);
+	LogInfo("MultipleComponentModuleGrammarAction: '%s'.", compAsCanvas->name);
 	tModule *module = malloc(sizeof(tModule));
 	module->canvas = compAsCanvas;
 	return module;
 }
-tModule *MultipleComponentAsCancasModuleGrammarAction(tComponentAsCanvas *compAsCanvas, tComponent **components)
+tModule *MultipleComponentAsCanvasModuleGrammarAction(tComponentAsCanvas *compAsCanvas, tComponent **components)
 {
-	LogDebug("CanvasModuleGrammarAction: Canvas.");
+	LogInfo("CanvasModuleGrammarAction: Canvas.");
 	tModule *module = (tModule *)malloc(sizeof(tModule));
 	module->canvas = compAsCanvas;
 	module->components = components;
@@ -72,7 +74,7 @@ tModule *MultipleComponentAsCancasModuleGrammarAction(tComponentAsCanvas *compAs
 // ComponentList.
 tComponent **MultipleComponentListGrammarAction(tComponent **prevComponents, tComponent *component)
 {
-	LogDebug("MultipleComponentListGrammarAction: '%s'.", component->name);
+	LogInfo("MultipleComponentListGrammarAction: '%s'.", component->name);
 	// No importa si no esta bien ahora.
 	tComponent **components = malloc(sizeof(tComponent) * ((sizeof(prevComponents) / sizeof(tComponent *)) + 1));
 	memcpy(components, prevComponents, sizeof(prevComponents));
@@ -81,7 +83,7 @@ tComponent **MultipleComponentListGrammarAction(tComponent **prevComponents, tCo
 }
 tComponent **SingleComponentListGrammarAction(tComponent *component)
 {
-	LogDebug("SingleComponentListGrammarAction: '%s'.", component->name);
+	LogInfo("SingleComponentListGrammarAction: '%s'.", component->name);
 	tComponent **components = malloc(sizeof(tComponent *));
 	return components;
 }
@@ -89,7 +91,7 @@ tComponent **SingleComponentListGrammarAction(tComponent *component)
 // Component.
 tComponent *ComponentGrammarAction(char *name, tDefinition *definition)
 {
-	LogDebug("ComponentGrammarAction: '%s'.", name);
+	LogInfo("ComponentGrammarAction: '%s'.", name);
 	tComponent *component = malloc(sizeof(tComponent));
 	component->name = name;
 	component->definition = definition;
@@ -99,7 +101,7 @@ tComponent *ComponentGrammarAction(char *name, tDefinition *definition)
 // Canvas.
 tCanvas *CanvasGrammarAction(tDefinition *definition)
 {
-	LogDebug("CanvasGrammarAction: '%s, %s, %s'.", definition->template == NULL ? "Template" : "No Template", definition->style == NULL ? "Style" : "No Style", definition->script == NULL ? "Script" : "No Script");
+	LogInfo("CanvasGrammarAction: '%s, %s, %s'.", definition->template == NULL ? "Template" : "No Template", definition->style == NULL ? "Style" : "No Style", definition->script == NULL ? "Script" : "No Script");
 	tCanvas *canvas = malloc(sizeof(tCanvas));
 	canvas->definition = definition;
 	return canvas;
@@ -108,7 +110,7 @@ tCanvas *CanvasGrammarAction(tDefinition *definition)
 // ComponentAsCanvas.
 tComponentAsCanvas *ComponentAsCanvasGrammarAction(char *name, tDefinition *definition)
 {
-	LogDebug("ComponentAsCanvasGrammarAction: '%s'.", name);
+	LogInfo("ComponentAsCanvasGrammarAction: '%s'.", name);
 	tComponentAsCanvas *componentAsCanvas = malloc(sizeof(tComponentAsCanvas));
 	componentAsCanvas->name = name;
 	componentAsCanvas->definition = definition;
@@ -116,46 +118,286 @@ tComponentAsCanvas *ComponentAsCanvasGrammarAction(char *name, tDefinition *defi
 }
 
 // Definition.
-tDefinition *TemplateDefinitionGrammarAction(tTemplate *template);
-tDefinition *TemplateScriptDefinitionGrammarAction(tTemplate *template, tScript *script);
-tDefinition *TemplateStyleDefinitionGrammarAction(tTemplate *template, tStyle *style);
-tDefinition *TemplateScriptStyleDefinitionGrammarAction(tTemplate *template, tScript *script, tStyle *style);
-tDefinition *TemplateStyleScriptDefinitionGrammarAction(tTemplate *template, tStyle *style, tScript *script);
+tDefinition *TemplateDefinitionGrammarAction(tTemplate *template)
+{
+	LogInfo("TemplateDefinitionGrammarAction: '%s'.", "template");
+	tDefinition *definition = malloc(sizeof(tDefinition));
+	definition->template = template;
+	definition->style = NULL;
+	definition->script = NULL;
+	return definition;
+}
+tDefinition *TemplateScriptDefinitionGrammarAction(tTemplate *template, tScript *script)
+{
+	LogInfo("TemplateDefinitionGrammarAction: '%s'.", "template + script");
+	tDefinition *definition = malloc(sizeof(tDefinition));
+	definition->template = template;
+	definition->style = NULL;
+	definition->script = script;
+	return definition;
+}
+tDefinition *TemplateStyleDefinitionGrammarAction(tTemplate *template, tStyle *style)
+{
+	LogInfo("TemplateDefinitionGrammarAction: '%s'.", "template + style");
+	tDefinition *definition = malloc(sizeof(tDefinition));
+	definition->template = template;
+	definition->style = style;
+	definition->script = NULL;
+	return definition;
+}
+tDefinition *TemplateScriptStyleDefinitionGrammarAction(tTemplate *template, tScript *script, tStyle *style)
+{
+	LogInfo("TemplateDefinitionGrammarAction: '%s'.", "template + script + style");
+	tDefinition *definition = malloc(sizeof(tDefinition));
+	definition->template = template;
+	definition->style = style;
+	definition->script = script;
+	return definition;
+}
+tDefinition *TemplateStyleScriptDefinitionGrammarAction(tTemplate *template, tStyle *style, tScript *script)
+{
+	return TemplateScriptStyleDefinitionGrammarAction(template, script, style);
+}
 // Template.
-tTemplate *TemplateGrammarAction(tPositionItem *positions);
+tTemplate *TemplateGrammarAction(tPosition *positions)
+{
+	LogInfo("TemplateGrammarAction: '%s'.", "template");
+	tTemplate *template = malloc(sizeof(tTemplate));
+	template->positions = positions;
+	return template;
+}
+tTemplate *TemplateEmptyGrammarAction()
+{
+	LogInfo("TemplateGrammarAction: '%s'.", "empty template");
+	tTemplate *template = malloc(sizeof(tTemplate));
+	template->positions = NULL;
+	return template;
+}
+
 // positioning.
-tPositionItem *SinglePositionItemGrammarAction(tPositionItem *element);
-tPositionItem **MultiplePositioningGrammarAction(tPositionItem **prevItems, tPositionItem *value);
+tPosition *SinglePositionItemGrammarAction(tPositionItem *positionItem)
+{
+	LogInfo("SinglePositionItemGrammarAction: '%s'.", "single position item");
+	tPosition *position = malloc(sizeof(tPosition));
+	position->items = malloc(sizeof(tPositionItem *));
+	position->items[0] = positionItem;
+	return position;
+}
+tPosition *MultiplePositioningGrammarAction(tPosition *prevItems, tPositionItem *newPos)
+{
+	LogInfo("MultiplePositioningGrammarAction: '%s'.", "multiple position items");
+	tPosition *position = malloc(sizeof(tPosition));
+	position->items = malloc(sizeof(tPositionItem) * ((sizeof(prevItems->items) / sizeof(tPositionItem)) + 1));
+	memcpy(position->items, prevItems->items, sizeof(prevItems->items));
+	position->items[(sizeof(prevItems->items) / sizeof(tPositionItem))] = newPos;
+	return position;
+}
 
 // positionItem.
-tPositionItem *PositionItemElementListGrammarAction(const char *name, tElement **elementList);
-tPositionItem *PositionItemVariableGrammarAction(const char *name, tVariable *variable);
-tPositionItem *PositionItemConstantGrammarAction(const char *name, tConstant *constant);
+tPositionItem *PositionItemElementListGrammarAction(int token, tElement **elementList)
+{
+	LogInfo("PositionItemElementListGrammarAction: '%s'.", token);
+	tPositionItem *positionItem = malloc(sizeof(tPositionItem));
+	positionItem->posToken = token;
+	positionItem->elements = elementList;
+	positionItem->variable = NULL;
+	positionItem->constant = NULL;
+	return positionItem;
+}
+tPositionItem *PositionItemVariableGrammarAction(int token, tVariable *variable)
+{
+	LogInfo("PositionItemVariableGrammarAction: '%s'.", token);
+	tPositionItem *positionItem = malloc(sizeof(tPositionItem));
+	positionItem->posToken = token;
+	positionItem->elements = NULL;
+	positionItem->variable = variable;
+	positionItem->constant = NULL;
+	return positionItem;
+}
+tPositionItem *PositionItemConstantGrammarAction(int token, tConstant *constant)
+{
+	LogInfo("PositionItemConstantGrammarAction: '%s'.", token);
+	tPositionItem *positionItem = malloc(sizeof(tPositionItem));
+	positionItem->posToken = token;
+	positionItem->elements = NULL;
+	positionItem->variable = NULL;
+	positionItem->constant = constant;
+	return positionItem;
+}
 
 // Style.
-void StyleGrammarAction();
+tStyle *StyleGrammarAction(char *cssCode)
+{
+	LogInfo("StyleGrammarAction: '%s'.", cssCode);
+	tStyle *style = malloc(sizeof(tStyle));
+	style->content = cssCode;
+	return style;
+}
 
 // Script.
-void ScriptGrammarAction();
+tScript *ScriptGrammarAction(char *jsCode)
+{
+	LogInfo("ScriptGrammarAction: '%s'.", jsCode);
+	tScript *script = malloc(sizeof(tScript));
+	script->content = jsCode;
+	return script;
+}
 
 // ElementList.
-tElement **MultipleElementListGrammarAction(tElement **elementList, tElement *element);
-tElement *OneElementListGrammarAction(tElement *element);
+tElement **MultipleElementListGrammarAction(tElement **elementList, tElement *element)
+{
+	LogInfo("MultipleElementListGrammarAction: '%s'.", "multiple element list");
+	tElement **newElementList = malloc(sizeof(tElement) * ((sizeof(elementList) / sizeof(tElement)) + 1));
+	memcpy(newElementList, elementList, sizeof(elementList));
+	newElementList[(sizeof(elementList) / sizeof(tElement))] = element;
+	return newElementList;
+}
+tElement **OneElementListGrammarAction(tElement *element)
+{
+	LogInfo("OneElementListGrammarAction: '%s'.", "one element list");
+	tElement **elementList = malloc(sizeof(tElement));
+	elementList[0] = element;
+	return elementList;
+}
 // Element.
-tElement *ElementGrammarAction(const char *name);
-tElement *ElementWithArgumentsGrammarAction(const char *name, tArgument **arguments);
+tElement *ElementGrammarAction(char *name)
+{
+	LogInfo("ElementGrammarAction: '%s'.", name);
+	tElement *element = malloc(sizeof(tElement));
+	element->name = name;
+	element->arguments = NULL;
+	return element;
+}
+tElement *ElementWithArgumentsGrammarAction(char *name, tArgument **arguments)
+{
+	LogInfo("ElementWithArgumentsGrammarAction: '%s'.", name);
+	tElement *element = malloc(sizeof(tElement));
+	element->name = name;
+	element->arguments = arguments;
+	return element;
+}
+
+// Variable
+tVariable *DollarVariableGrammarAction(char *name)
+{
+	LogInfo("DollarVariableGrammarAction: '%s'.", name);
+	tVariable *variable = malloc(sizeof(tVariable));
+	variable->name = name;
+	variable->type = VARIABLE_TYPE_DOLLAR;
+	return variable;
+}
+tVariable *PropVariableGrammarAction(char *name)
+{
+	LogInfo("PropVariableGrammarAction: '%s'.", name);
+	tVariable *variable = malloc(sizeof(tVariable));
+	variable->name = name;
+	variable->type = VARIABLE_TYPE_PROP;
+	return variable;
+}
+
+// Constant
+tConstant *ConstantGrammarAction(char *value)
+{
+	LogInfo("ConstantGrammarAction: '%s'.", value);
+	tConstant *constant = malloc(sizeof(tConstant));
+	constant->value = value;
+	return constant;
+}
 
 // ArgumentList.
-tArgument *SingleArgumentGrammarAction(tArgument *value);
-tArgument **MultipleArgumentGrammarAction(tArgument **prevArguments, tArgument *value);
+tArgument **SingleArgumentGrammarAction(tArgument *value)
+{
+	LogInfo("SingleArgumentGrammarAction: '%s'.", "single argument");
+	tArgument **arguments = malloc(sizeof(tArgument));
+	arguments[0] = value;
+	return arguments;
+}
+tArgument **MultipleArgumentGrammarAction(tArgument **prevArguments, tArgument *value)
+{
+	LogInfo("MultipleArgumentGrammarAction: '%s'.", "multiple arguments");
+	tArgument **arguments = malloc(sizeof(tArgument) * ((sizeof(prevArguments) / sizeof(tArgument)) + 1));
+	memcpy(arguments, prevArguments, sizeof(prevArguments));
+	arguments[(sizeof(prevArguments) / sizeof(tArgument))] = value;
+	return arguments;
+}
 
 // Argument.
-tArgument *StringArgumentGrammarAction(const char *name, const char *value);
-tArgument *IntegerArgumentGrammarAction(const char *name, const int value);
-tArgument *FloatArgumentGrammarAction(const char *name, const float value);
-tArgument *BooleanArgumentGrammarAction(const char *name, const boolean value);
-tArgument *ConcatenatedArgumentGrammarAction(const char *name, tArgument *value);
-tArgument *OnlyStringArgumentGrammarAction(const char *value);
-tArgument *OnlyIntegerArgumentGrammarAction(const int value);
-tArgument *OnlyFloatArgumentGrammarAction(const float value);
-tArgument *OnlyBooleanArgumentGrammarAction(const boolean value);
+tArgument *StringArgumentGrammarAction(char *name, char *value)
+{
+	LogInfo("StringArgumentGrammarAction: '%s'.", name);
+	tArgument *argument = malloc(sizeof(tArgument));
+	argument->name = name;
+	argument->value = value;
+	return argument;
+}
+tArgument *IntegerArgumentGrammarAction(char *name, int value)
+{
+	LogInfo("IntegerArgumentGrammarAction: '%s'.", name);
+	tArgument *argument = malloc(sizeof(tArgument));
+	argument->name = name;
+	argument->value = malloc(sizeof(int));
+	// argument->value = (void *)value;
+	*((int *)argument->value) = value;
+	return argument;
+}
+tArgument *FloatArgumentGrammarAction(char *name, float value)
+{
+	LogInfo("FloatArgumentGrammarAction: '%s'.", name);
+	tArgument *argument = malloc(sizeof(tArgument));
+	argument->name = name;
+	argument->value = malloc(sizeof(float));
+	*(float *)argument->value = value;
+	return argument;
+}
+tArgument *BooleanArgumentGrammarAction(char *name, boolean value)
+{
+	LogInfo("BooleanArgumentGrammarAction: '%s'.", name);
+	tArgument *argument = malloc(sizeof(tArgument));
+	argument->name = name;
+	argument->value = malloc(sizeof(boolean));
+	*(boolean *)argument->value = value;
+	return argument;
+}
+tArgument *ConcatenatedArgumentGrammarAction(char *name, tArgument *value)
+{
+	LogInfo("ConcatenatedArgumentGrammarAction: '%s'.", name);
+	tArgument *argument = malloc(sizeof(tArgument));
+	argument->name = name;
+	argument->value = value;
+	return argument;
+}
+tArgument *OnlyStringArgumentGrammarAction(char *value)
+{
+	LogInfo("OnlyStringArgumentGrammarAction: '%s'.", value);
+	tArgument *argument = malloc(sizeof(tArgument));
+	argument->name = NULL;
+	argument->value = value;
+	return argument;
+}
+tArgument *OnlyIntegerArgumentGrammarAction(int value)
+{
+	LogInfo("OnlyIntegerArgumentGrammarAction: '%d'.", value);
+	tArgument *argument = malloc(sizeof(tArgument));
+	argument->name = NULL;
+	argument->value = malloc(sizeof(int));
+	*(int *)argument->value = value;
+	return argument;
+}
+tArgument *OnlyFloatArgumentGrammarAction(float value)
+{
+	LogInfo("OnlyFloatArgumentGrammarAction: '%f'.", value);
+	tArgument *argument = malloc(sizeof(tArgument));
+	argument->name = NULL;
+	argument->value = malloc(sizeof(float));
+	*(float *)argument->value = value;
+	return argument;
+}
+tArgument *OnlyBooleanArgumentGrammarAction(boolean value)
+{
+	LogInfo("OnlyBooleanArgumentGrammarAction: '%d'.", value);
+	tArgument *argument = malloc(sizeof(tArgument));
+	argument->name = NULL;
+	argument->value = malloc(sizeof(boolean));
+	*(boolean *)argument->value = value;
+	return argument;
+}

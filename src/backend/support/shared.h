@@ -44,6 +44,7 @@ typedef struct tVariable
 {
 	char *name;
 	void *value;
+	int type;
 } tVariable;
 
 typedef struct tConstant
@@ -56,26 +57,32 @@ typedef struct tElement
 	char *name;
 	tArgument **arguments;
 } tElement;
+
 typedef struct tPositionItem
 {
-	char *name;
+	int posToken;
 	tVariable *variable; // Solo puede tener 1 de estos 3 valores.
 	tConstant *constant;
 	tElement **elements;
 } tPositionItem;
 
+typedef struct tPosition
+{
+	tPositionItem **items;
+} tPosition;
+
 typedef struct tStyle
 {
-	char *value;
+	char *content;
 } tStyle;
 typedef struct tScript
 {
-	char *value;
+	char *content;
 } tScript;
 
 typedef struct tTemplate
 {
-	tPositionItem **positions;
+	tPosition *positions;
 } tTemplate;
 typedef struct tDefinition
 {

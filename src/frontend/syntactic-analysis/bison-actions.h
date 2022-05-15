@@ -21,7 +21,7 @@ tModule *ProgramModulesGrammarAction(tModule *module);
 tModule *CanvasModuleGrammarAction(tCanvas *canvas);
 tModule *MultipleComponentModuleGrammarAction(tCanvas *canvas, tComponent **components);
 tModule *ComponentAsCanvasModuleGrammarAction(tComponentAsCanvas *compAsCanvas);
-tModule **MultipleComponentAsCanvasModuleGrammarAction(tComponentAsCanvas *compAsCanvas, tComponent **components);
+tModule *MultipleComponentAsCanvasModuleGrammarAction(tComponentAsCanvas *compAsCanvas, tComponent **components);
 
 // ComponentList.
 tComponent **MultipleComponentListGrammarAction(tComponent **prevComponents, tComponent *component);
@@ -42,48 +42,52 @@ tDefinition *TemplateStyleDefinitionGrammarAction(tTemplate *template, tStyle *s
 tDefinition *TemplateScriptStyleDefinitionGrammarAction(tTemplate *template, tScript *script, tStyle *style);
 tDefinition *TemplateStyleScriptDefinitionGrammarAction(tTemplate *template, tStyle *style, tScript *script);
 // Template.
-tTemplate *TemplateGrammarAction(tPositionItem *positions);
+tTemplate *TemplateGrammarAction(tPosition *positions);
 tTemplate *TemplateEmptyGrammarAction();
 // positioning.
-tPositionItem *SinglePositionItemGrammarAction(tPositionItem *element);
-tPositionItem **MultiplePositioningGrammarAction(tPositionItem **prevItems, tPositionItem *value);
+tPosition *SinglePositionItemGrammarAction(tPositionItem *element);
+tPosition *MultiplePositioningGrammarAction(tPosition *prevItems, tPositionItem *value);
 
 // positionItem.
-tPositionItem *PositionItemElementListGrammarAction(const char *name, tElement **elementList);
-tPositionItem *PositionItemVariableGrammarAction(const char *name, tVariable *variable);
-tPositionItem *PositionItemConstantGrammarAction(const char *name, tConstant *constant);
+tPositionItem *PositionItemElementListGrammarAction(int token, tElement **elementList);
+tPositionItem *PositionItemVariableGrammarAction(int token, tVariable *variable);
+tPositionItem *PositionItemConstantGrammarAction(int token, tConstant *constant);
 
 // pItem
 
 // Style.
-void StyleGrammarAction();
+tStyle *StyleGrammarAction(char *cssCode);
 
 // Script.
-void ScriptGrammarAction();
+tScript *ScriptGrammarAction(char *jsCode);
 
 // ElementList.
 tElement **MultipleElementListGrammarAction(tElement **elementList, tElement *element);
-tElement *OneElementListGrammarAction(tElement *element);
+tElement **OneElementListGrammarAction(tElement *element);
 // Element.
-tElement *ElementGrammarAction(const char *name);
-tElement *ElementWithArgumentsGrammarAction(const char *name, tArgument **arguments);
+tElement *ElementGrammarAction(char *name);
+tElement *ElementWithArgumentsGrammarAction(char *name, tArgument **arguments);
 
 // Variable
+tVariable *DollarVariableGrammarAction(char *name);
+tVariable *PropVariableGrammarAction(char *name);
 
+// Constant
+tConstant *ConstantGrammarAction(char *value);
 // ArgumentList.
-tArgument *SingleArgumentGrammarAction(tArgument *value);
+tArgument **SingleArgumentGrammarAction(tArgument *value);
 tArgument **MultipleArgumentGrammarAction(tArgument **prevArguments, tArgument *value);
 
 // Argument.
-tArgument *StringArgumentGrammarAction(const char *name, const char *value);
-tArgument *IntegerArgumentGrammarAction(const char *name, const int value);
-tArgument *FloatArgumentGrammarAction(const char *name, const float value);
-tArgument *BooleanArgumentGrammarAction(const char *name, const boolean value);
-tArgument *ConcatenatedArgumentGrammarAction(const char *name, tArgument *value);
-tArgument *OnlyStringArgumentGrammarAction(const char *value);
-tArgument *OnlyIntegerArgumentGrammarAction(const int value);
-tArgument *OnlyFloatArgumentGrammarAction(const float value);
-tArgument *OnlyBooleanArgumentGrammarAction(const boolean value);
+tArgument *StringArgumentGrammarAction(char *name, char *value);
+tArgument *IntegerArgumentGrammarAction(char *name, int value);
+tArgument *FloatArgumentGrammarAction(char *name, float value);
+tArgument *BooleanArgumentGrammarAction(char *name, boolean value);
+tArgument *ConcatenatedArgumentGrammarAction(char *name, tArgument *value);
+tArgument *OnlyStringArgumentGrammarAction(char *value);
+tArgument *OnlyIntegerArgumentGrammarAction(int value);
+tArgument *OnlyFloatArgumentGrammarAction(float value);
+tArgument *OnlyBooleanArgumentGrammarAction(boolean value);
 
 /*
 

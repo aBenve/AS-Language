@@ -1,6 +1,6 @@
 module Canvas {
     Template: {
-        rightCenter:[a],
+        rightCenter:[a,v],
         center:[b],
         leftCenter:[c]
     }
