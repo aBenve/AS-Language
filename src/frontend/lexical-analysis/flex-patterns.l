@@ -19,7 +19,7 @@
 /* Patrones reutilizables. */
 crlf			\r\n
 digit			[0-9]
-float           [0-9]*\.[0-9]*
+float           [0-9]+\.[0-9]*
 boolean          (true|false)
 endline			\n
 whitespace		[ \f\n\r\t\v]

@@ -46,71 +46,85 @@ yytoken_kind_t DotPatternAction()
 yytoken_kind_t TopPositionPatternAction()
 {
 	LogDebug("TopPositionPatternAction");
+	yylval.token = TOP;
 	return TOP;
 }
 yytoken_kind_t BottomPositionPatternAction()
 {
 	LogDebug("BottomPositionPatternAction");
+	yylval.token = BOTTOM;
 	return BOTTOM;
 }
 yytoken_kind_t LeftPositionPatternAction()
 {
 	LogDebug("LeftPositionPatternAction");
+	yylval.token = LEFT;
 	return LEFT;
 }
 yytoken_kind_t RightPositionPatternAction()
 {
 	LogDebug("RightPositionPatternAction");
+	yylval.token = RIGHT;
 	return RIGHT;
 }
 yytoken_kind_t CenterPositionPatternAction()
 {
 	LogDebug("CenterPositionPatternAction");
+	yylval.token = CENTER;
 	return CENTER;
 }
 yytoken_kind_t TopRightPositionPatternAction()
 {
 	LogDebug("TopRightPositionPatternAction");
+	yylval.token = TOP_RIGHT;
 	return TOP_RIGHT;
 }
 yytoken_kind_t TopLeftPositionPatternAction()
 {
 	LogDebug("TopLeftPositionPatternAction");
+	yylval.token = TOP_LEFT;
 	return TOP_LEFT;
 }
 yytoken_kind_t BottomLeftPositionPatternAction()
 {
 	LogDebug("BottomLeftPositionPatternAction");
+	yylval.token = BOTTOM_LEFT;
 	return BOTTOM_LEFT;
 }
 yytoken_kind_t BottomRightPositionPatternAction()
 {
 	LogDebug("BottomRightPositionPatternAction");
+	yylval.token = BOTTOM_RIGHT;
 	return BOTTOM_RIGHT;
 }
 yytoken_kind_t BottomCenterPositionPatternAction()
 {
 	LogDebug("BottomCenterPositionPatternAction");
+	yylval.token = BOTTOM_CENTER;
 	return BOTTOM_CENTER;
 }
 yytoken_kind_t TopCenterPositionPatternAction()
 {
 	LogDebug("TopCenterPositionPatternAction");
+	yylval.token = TOP_CENTER;
 	return TOP_CENTER;
 }
 yytoken_kind_t LeftCenterPositionPatternAction()
 {
 	LogDebug("LeftCenterPositionPatternAction");
+	yylval.token = LEFT_CENTER;
 	return LEFT_CENTER;
 }
 yytoken_kind_t RightCenterPositionPatternAction()
 {
 	LogDebug("RightCenterPositionPatternAction");
+	yylval.token = RIGHT_CENTER;
 	return RIGHT_CENTER;
 }
 yytoken_kind_t ChildrenPositionPatternAction()
 {
 	LogDebug("ChildrenPositionPatternAction");
+	yylval.token = CHILDREN;
 	return CHILDREN;
 }
 yytoken_kind_t OpenCurlyPatternAction()
@@ -156,11 +170,13 @@ yytoken_kind_t ScriptPatternAction()
 yytoken_kind_t JsCodePatternAction(char *lexeme)
 {
 	LogDebug("JsCodePatternAction: %s", lexeme);
+	yylval.string = lexeme;
 	return JS_CODE;
 }
 yytoken_kind_t CssCodePatternAction(char *lexeme)
 {
 	LogDebug("CssCodePatternAction: %s", lexeme);
+	yylval.string = lexeme;
 	return CSS_CODE;
 }
 yytoken_kind_t StylePatternAction()

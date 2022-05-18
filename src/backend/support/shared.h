@@ -58,12 +58,23 @@ typedef struct tElement
 	tArgument **arguments;
 } tElement;
 
+typedef struct tElementList
+{
+	tElement **elements;
+
+} tElementList;
+
+typedef struct tPosToken
+{
+	int token;
+} tPosToken;
+
 typedef struct tPositionItem
 {
-	int posToken;
+	tPosToken *posToken;
 	tVariable *variable; // Solo puede tener 1 de estos 3 valores.
 	tConstant *constant;
-	tElement **elements;
+	tElementList *elements;
 } tPositionItem;
 
 typedef struct tPosition

@@ -17,7 +17,8 @@
 	tVariable * variable;
 	tConstant * constant;
 	tElement * element;
-	tElement ** elementList;
+	tElementList * elementList;
+	tPosToken * posToken;
 	tPositionItem * positionItem;
 	tPosition * positioning;
 	tTemplate * template;
@@ -48,7 +49,7 @@
 %type <constant> constant
 %type <argumentList> argumentList
 %type <argument> argument
-%type <token> pItem
+%type <posToken> pItem
 
 
 %token <token> OPEN_PARENTHESIS
@@ -207,7 +208,21 @@
 		| pItem COLON constant { $$ = PositionItemConstantGrammarAction($1, $3);  }
 		;
 
-	pItem: 	TOP_RIGHT | TOP_LEFT | BOTTOM_RIGHT | BOTTOM_LEFT | TOP_CENTER | BOTTOM_CENTER | LEFT_CENTER | RIGHT_CENTER | RIGHT | LEFT | TOP | BOTTOM | CENTER | CHILDREN ;
+	pItem: 	TOP_RIGHT { $$ = TopRightGrammarAction($1);  }
+		| TOP_LEFT { $$ = TopLeftGrammarAction($1);  }
+		| BOTTOM_RIGHT { $$ = BottomRightGrammarAction($1);  }
+		| BOTTOM_LEFT { $$ = BottomLeftGrammarAction($1);  }
+		| TOP_CENTER { $$ = TopCenterGrammarAction($1);  }
+		| BOTTOM_CENTER { $$ = BottomCenterGrammarAction($1);  }
+		| LEFT_CENTER { $$ = LeftCenterGrammarAction($1);  }
+		| RIGHT_CENTER { $$ = RightCenterGrammarAction($1);  }
+		| RIGHT { $$ = RightGrammarAction($1);  }
+		| LEFT { $$ = LeftGrammarAction($1);  }
+		| BOTTOM { $$ = BottomGrammarAction($1);  }
+		| TOP { $$ = TopGrammarAction($1);  }
+		| CENTER { $$ = CenterGrammarAction($1);  }
+		| CHILDREN { $$ = ChildrenGrammarAction($1);  }
+		;
 
 	script: SCRIPT COLON JS_CODE  { $$ = ScriptGrammarAction($3);  }
 		;

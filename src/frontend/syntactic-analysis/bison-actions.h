@@ -49,11 +49,25 @@ tPosition *SinglePositionItemGrammarAction(tPositionItem *element);
 tPosition *MultiplePositioningGrammarAction(tPosition *prevItems, tPositionItem *value);
 
 // positionItem.
-tPositionItem *PositionItemElementListGrammarAction(int token, tElement **elementList);
-tPositionItem *PositionItemVariableGrammarAction(int token, tVariable *variable);
-tPositionItem *PositionItemConstantGrammarAction(int token, tConstant *constant);
+tPositionItem *PositionItemElementListGrammarAction(tPosToken *token, tElementList *elementList);
+tPositionItem *PositionItemVariableGrammarAction(tPosToken *token, tVariable *variable);
+tPositionItem *PositionItemConstantGrammarAction(tPosToken *token, tConstant *constant);
 
 // pItem
+tPosToken *TopRightGrammarAction(int token);
+tPosToken *TopLeftGrammarAction(int token);
+tPosToken *BottomRightGrammarAction(int token);
+tPosToken *BottomLeftGrammarAction(int token);
+tPosToken *TopCenterGrammarAction(int token);
+tPosToken *BottomCenterGrammarAction(int token);
+tPosToken *RightCenterGrammarAction(int token);
+tPosToken *LeftCenterGrammarAction(int token);
+tPosToken *RightGrammarAction(int token);
+tPosToken *LeftGrammarAction(int token);
+tPosToken *BottomGrammarAction(int token);
+tPosToken *TopGrammarAction(int token);
+tPosToken *CenterGrammarAction(int token);
+tPosToken *ChildrenGrammarAction(int token);
 
 // Style.
 tStyle *StyleGrammarAction(char *cssCode);
@@ -62,8 +76,8 @@ tStyle *StyleGrammarAction(char *cssCode);
 tScript *ScriptGrammarAction(char *jsCode);
 
 // ElementList.
-tElement **MultipleElementListGrammarAction(tElement **elementList, tElement *element);
-tElement **OneElementListGrammarAction(tElement *element);
+tElementList *MultipleElementListGrammarAction(tElementList *elementList, tElement *element);
+tElementList *OneElementListGrammarAction(tElement *element);
 // Element.
 tElement *ElementGrammarAction(char *name);
 tElement *ElementWithArgumentsGrammarAction(char *name, tArgument **arguments);

@@ -57,15 +57,17 @@ tModule *MultipleComponentModuleGrammarAction(tCanvas *canvas, tComponent **comp
 }
 tModule *ComponentAsCanvasModuleGrammarAction(tComponentAsCanvas *compAsCanvas)
 {
-	LogInfo("MultipleComponentModuleGrammarAction: '%s'.", compAsCanvas->name);
+	LogInfo("ComponentAsCanvasModuleGrammarAction: '%s'.", compAsCanvas->name);
 	tModule *module = malloc(sizeof(tModule));
 	module->canvas = compAsCanvas;
+	module->components = NULL;
+
 	return module;
 }
 tModule *MultipleComponentAsCanvasModuleGrammarAction(tComponentAsCanvas *compAsCanvas, tComponent **components)
 {
-	LogInfo("CanvasModuleGrammarAction: Canvas.");
-	tModule *module = (tModule *)malloc(sizeof(tModule));
+	LogInfo("MultipleComponentAsCanvasModuleGrammarAction: Canvas.");
+	tModule *module = malloc(sizeof(tModule));
 	module->canvas = compAsCanvas;
 	module->components = components;
 
@@ -85,6 +87,7 @@ tComponent **SingleComponentListGrammarAction(tComponent *component)
 {
 	LogInfo("SingleComponentListGrammarAction: '%s'.", component->name);
 	tComponent **components = malloc(sizeof(tComponent *));
+	components[0] = component;
 	return components;
 }
 
@@ -112,7 +115,8 @@ tComponentAsCanvas *ComponentAsCanvasGrammarAction(char *name, tDefinition *defi
 {
 	LogInfo("ComponentAsCanvasGrammarAction: '%s'.", name);
 	tComponentAsCanvas *componentAsCanvas = malloc(sizeof(tComponentAsCanvas));
-	componentAsCanvas->name = name;
+	componentAsCanvas->name = malloc(sizeof(char) * (strlen(name) + 1));
+	strcpy(componentAsCanvas->name, name);
 	componentAsCanvas->definition = definition;
 	return componentAsCanvas;
 }
@@ -194,35 +198,135 @@ tPosition *MultiplePositioningGrammarAction(tPosition *prevItems, tPositionItem 
 }
 
 // positionItem.
-tPositionItem *PositionItemElementListGrammarAction(int token, tElement **elementList)
+tPositionItem *PositionItemElementListGrammarAction(tPosToken *posToken, tElementList *elementList)
 {
-	LogInfo("PositionItemElementListGrammarAction: '%s'.", token);
+	LogInfo("PositionItemElementListGrammarAction: '%d'.", posToken->token);
 	tPositionItem *positionItem = malloc(sizeof(tPositionItem));
-	positionItem->posToken = token;
+	positionItem->posToken = posToken;
 	positionItem->elements = elementList;
 	positionItem->variable = NULL;
 	positionItem->constant = NULL;
 	return positionItem;
 }
-tPositionItem *PositionItemVariableGrammarAction(int token, tVariable *variable)
+tPositionItem *PositionItemVariableGrammarAction(tPosToken *posToken, tVariable *variable)
 {
-	LogInfo("PositionItemVariableGrammarAction: '%s'.", token);
+	LogInfo("PositionItemVariableGrammarAction: '%d'.", posToken->token);
 	tPositionItem *positionItem = malloc(sizeof(tPositionItem));
-	positionItem->posToken = token;
+	positionItem->posToken = posToken;
 	positionItem->elements = NULL;
 	positionItem->variable = variable;
 	positionItem->constant = NULL;
 	return positionItem;
 }
-tPositionItem *PositionItemConstantGrammarAction(int token, tConstant *constant)
+tPositionItem *PositionItemConstantGrammarAction(tPosToken *posToken, tConstant *constant)
 {
-	LogInfo("PositionItemConstantGrammarAction: '%s'.", token);
+	LogInfo("PositionItemConstantGrammarAction: '%d, %s'.", posToken->token, constant->value);
 	tPositionItem *positionItem = malloc(sizeof(tPositionItem));
-	positionItem->posToken = token;
+	positionItem->posToken = posToken;
 	positionItem->elements = NULL;
 	positionItem->variable = NULL;
 	positionItem->constant = constant;
 	return positionItem;
+}
+
+// pItem
+tPosToken *TopRightGrammarAction(int token)
+{
+	LogInfo("TopRightGrammarAction: '%d'.", token);
+	tPosToken *posToken = malloc(sizeof(tPosToken));
+	posToken->token = token;
+	return posToken;
+}
+tPosToken *TopLeftGrammarAction(int token)
+{
+	LogInfo("TopLeftGrammarAction: '%d'.", token);
+	tPosToken *posToken = malloc(sizeof(tPosToken));
+	posToken->token = token;
+	return posToken;
+}
+tPosToken *BottomRightGrammarAction(int token)
+{
+	LogInfo("BottomRightGrammarAction: '%d'.", token);
+	tPosToken *posToken = malloc(sizeof(tPosToken));
+	posToken->token = token;
+	return posToken;
+}
+tPosToken *BottomLeftGrammarAction(int token)
+{
+	LogInfo("BottomLeftGrammarAction: '%d'.", token);
+	tPosToken *posToken = malloc(sizeof(tPosToken));
+	posToken->token = token;
+	return posToken;
+}
+tPosToken *TopCenterGrammarAction(int token)
+{
+	LogInfo("TopCenterGrammarAction: '%d'.", token);
+	tPosToken *posToken = malloc(sizeof(tPosToken));
+	posToken->token = token;
+	return posToken;
+}
+tPosToken *BottomCenterGrammarAction(int token)
+{
+	LogInfo("BottomCenterGrammarAction: '%d'.", token);
+	tPosToken *posToken = malloc(sizeof(tPosToken));
+	posToken->token = token;
+	return posToken;
+}
+tPosToken *RightCenterGrammarAction(int token)
+{
+	LogInfo("RightCenterGrammarAction: '%d'.", token);
+	tPosToken *posToken = malloc(sizeof(tPosToken));
+	posToken->token = token;
+	return posToken;
+}
+tPosToken *LeftCenterGrammarAction(int token)
+{
+	LogInfo("LeftCenterGrammarAction: '%d'.", token);
+	tPosToken *posToken = malloc(sizeof(tPosToken));
+	posToken->token = token;
+	return posToken;
+}
+tPosToken *RightGrammarAction(int token)
+{
+	LogInfo("RightGrammarAction: '%d'.", token);
+	tPosToken *posToken = malloc(sizeof(tPosToken));
+	posToken->token = token;
+	return posToken;
+}
+tPosToken *LeftGrammarAction(int token)
+{
+	LogInfo("LeftGrammarAction: '%d'.", token);
+	tPosToken *posToken = malloc(sizeof(tPosToken));
+	posToken->token = token;
+	return posToken;
+}
+tPosToken *BottomGrammarAction(int token)
+{
+	LogInfo("BottomGrammarAction: '%d'.", token);
+	tPosToken *posToken = malloc(sizeof(tPosToken));
+	posToken->token = token;
+	return posToken;
+}
+tPosToken *TopGrammarAction(int token)
+{
+	LogInfo("TopGrammarAction: '%d'.", token);
+	tPosToken *posToken = malloc(sizeof(tPosToken));
+	posToken->token = token;
+	return posToken;
+}
+tPosToken *CenterGrammarAction(int token)
+{
+	LogInfo("CenterGrammarAction: '%d'.", token);
+	tPosToken *posToken = malloc(sizeof(tPosToken));
+	posToken->token = token;
+	return posToken;
+}
+tPosToken *ChildrenGrammarAction(int token)
+{
+	LogInfo("ChildrenGrammarAction: '%d'.", token);
+	tPosToken *posToken = malloc(sizeof(tPosToken));
+	posToken->token = token;
+	return posToken;
 }
 
 // Style.
@@ -244,19 +348,21 @@ tScript *ScriptGrammarAction(char *jsCode)
 }
 
 // ElementList.
-tElement **MultipleElementListGrammarAction(tElement **elementList, tElement *element)
+tElementList *MultipleElementListGrammarAction(tElementList *elementList, tElement *element)
 {
 	LogInfo("MultipleElementListGrammarAction: '%s'.", "multiple element list");
-	tElement **newElementList = malloc(sizeof(tElement) * ((sizeof(elementList) / sizeof(tElement)) + 1));
-	memcpy(newElementList, elementList, sizeof(elementList));
-	newElementList[(sizeof(elementList) / sizeof(tElement))] = element;
+	tElementList *newElementList = malloc(sizeof(tElementList));
+	newElementList->elements = malloc(sizeof(tElement *) * ((sizeof(elementList->elements) / sizeof(tElement *)) + 1));
+	memcpy(newElementList->elements, elementList->elements, sizeof(elementList->elements));
+	newElementList->elements[(sizeof(elementList->elements) / sizeof(tElement *))] = element;
 	return newElementList;
 }
-tElement **OneElementListGrammarAction(tElement *element)
+tElementList *OneElementListGrammarAction(tElement *element)
 {
-	LogInfo("OneElementListGrammarAction: '%s'.", "one element list");
-	tElement **elementList = malloc(sizeof(tElement));
-	elementList[0] = element;
+	LogInfo("OneElementListGrammarAction: '%s'.", element->name);
+	tElementList *elementList = malloc(sizeof(tElementList));
+	elementList->elements = malloc(sizeof(tElement *));
+	elementList->elements[0] = element;
 	return elementList;
 }
 // Element.
@@ -264,7 +370,8 @@ tElement *ElementGrammarAction(char *name)
 {
 	LogInfo("ElementGrammarAction: '%s'.", name);
 	tElement *element = malloc(sizeof(tElement));
-	element->name = name;
+	element->name = malloc(strlen(name) + 1);
+	strcpy(element->name, name);
 	element->arguments = NULL;
 	return element;
 }
@@ -272,7 +379,8 @@ tElement *ElementWithArgumentsGrammarAction(char *name, tArgument **arguments)
 {
 	LogInfo("ElementWithArgumentsGrammarAction: '%s'.", name);
 	tElement *element = malloc(sizeof(tElement));
-	element->name = name;
+	element->name = malloc(sizeof(char) * (strlen(name) + 1));
+	strcpy(element->name, name);
 	element->arguments = arguments;
 	return element;
 }
@@ -282,7 +390,8 @@ tVariable *DollarVariableGrammarAction(char *name)
 {
 	LogInfo("DollarVariableGrammarAction: '%s'.", name);
 	tVariable *variable = malloc(sizeof(tVariable));
-	variable->name = name;
+	variable->name = malloc(sizeof(char) * (strlen(name) + 1));
+	strcpy(variable->name, name);
 	variable->type = VARIABLE_TYPE_DOLLAR;
 	return variable;
 }
@@ -290,7 +399,8 @@ tVariable *PropVariableGrammarAction(char *name)
 {
 	LogInfo("PropVariableGrammarAction: '%s'.", name);
 	tVariable *variable = malloc(sizeof(tVariable));
-	variable->name = name;
+	variable->name = malloc(sizeof(char) * (strlen(name) + 1));
+	strcpy(variable->name, name);
 	variable->type = VARIABLE_TYPE_PROP;
 	return variable;
 }
@@ -300,7 +410,8 @@ tConstant *ConstantGrammarAction(char *value)
 {
 	LogInfo("ConstantGrammarAction: '%s'.", value);
 	tConstant *constant = malloc(sizeof(tConstant));
-	constant->value = value;
+	constant->value = malloc(sizeof(char) * (strlen(value) + 1));
+	strcpy(constant->value, value);
 	return constant;
 }
 
