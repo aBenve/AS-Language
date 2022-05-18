@@ -1,4 +1,4 @@
-module miElemento as Canvas {
+module Canvas {
     Template: {
         top:"Mi super elemento"
     }

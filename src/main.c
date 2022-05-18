@@ -29,7 +29,7 @@ const int main(const int argumentCount, const char **arguments)
 	case 0:
 		if (state.succeed)
 		{
-			LogInfo("La compilacion fue exitosa.");
+			LogInfo("La compilacion fue exitosa. 😃😃😃 ");
 			// analizador semantico va aca y tiene que recibir el arbol.
 			// state.result es el puntero a la estructura del programa
 			// Generator(state.result);

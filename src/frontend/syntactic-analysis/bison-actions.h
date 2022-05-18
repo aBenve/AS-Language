@@ -31,7 +31,8 @@ tComponent **SingleComponentListGrammarAction(tComponent *component);
 tComponent *ComponentGrammarAction(char *name, tDefinition *definition);
 // ComponentAsCanvas.
 tComponentAsCanvas *ComponentAsCanvasGrammarAction(char *name, tDefinition *definition);
-
+// ComponentName
+char *ComponentNameGrammarAction(char *name);
 // Canvas.
 tCanvas *CanvasGrammarAction(tDefinition *definition);
 

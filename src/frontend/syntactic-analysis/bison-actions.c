@@ -96,11 +96,20 @@ tComponent *ComponentGrammarAction(char *name, tDefinition *definition)
 {
 	LogInfo("ComponentGrammarAction: '%s'.", name);
 	tComponent *component = malloc(sizeof(tComponent));
-	component->name = name;
+	component->name = malloc(sizeof(char) * (strlen(name) + 1));
+	strcpy(component->name, name);
 	component->definition = definition;
 	return component;
 }
 
+// ComponentName
+char *ComponentNameGrammarAction(char *name)
+{
+	LogInfo("ComponentNameGrammarAction: '%s'.", name);
+	char *componentName = malloc(sizeof(char) * (strlen(name) + 1));
+	strcpy(componentName, name);
+	return componentName;
+}
 // Canvas.
 tCanvas *CanvasGrammarAction(tDefinition *definition)
 {
@@ -334,7 +343,8 @@ tStyle *StyleGrammarAction(char *cssCode)
 {
 	LogInfo("StyleGrammarAction: '%s'.", cssCode);
 	tStyle *style = malloc(sizeof(tStyle));
-	style->content = cssCode;
+	style->content = malloc(sizeof(char) * (strlen(cssCode) + 1));
+	strcpy(style->content, cssCode);
 	return style;
 }
 
@@ -343,7 +353,8 @@ tScript *ScriptGrammarAction(char *jsCode)
 {
 	LogInfo("ScriptGrammarAction: '%s'.", jsCode);
 	tScript *script = malloc(sizeof(tScript));
-	script->content = jsCode;
+	script->content = malloc(sizeof(char) * (strlen(jsCode) + 1));
+	strcpy(script->content, jsCode);
 	return script;
 }
 
@@ -437,15 +448,18 @@ tArgument *StringArgumentGrammarAction(char *name, char *value)
 {
 	LogInfo("StringArgumentGrammarAction: '%s'.", name);
 	tArgument *argument = malloc(sizeof(tArgument));
-	argument->name = name;
-	argument->value = value;
+	argument->name = malloc(sizeof(char) * (strlen(name) + 1));
+	strcpy(argument->name, name);
+	argument->value = malloc(sizeof(char) * (strlen(value) + 1));
+	strcpy(argument->value, value);
 	return argument;
 }
 tArgument *IntegerArgumentGrammarAction(char *name, int value)
 {
 	LogInfo("IntegerArgumentGrammarAction: '%s'.", name);
 	tArgument *argument = malloc(sizeof(tArgument));
-	argument->name = name;
+	argument->name = malloc(sizeof(char) * (strlen(name) + 1));
+	strcpy(argument->name, name);
 	argument->value = malloc(sizeof(int));
 	// argument->value = (void *)value;
 	*((int *)argument->value) = value;
@@ -455,7 +469,8 @@ tArgument *FloatArgumentGrammarAction(char *name, float value)
 {
 	LogInfo("FloatArgumentGrammarAction: '%s'.", name);
 	tArgument *argument = malloc(sizeof(tArgument));
-	argument->name = name;
+	argument->name = malloc(sizeof(char) * (strlen(name) + 1));
+	strcpy(argument->name, name);
 	argument->value = malloc(sizeof(float));
 	*(float *)argument->value = value;
 	return argument;
@@ -464,7 +479,8 @@ tArgument *BooleanArgumentGrammarAction(char *name, boolean value)
 {
 	LogInfo("BooleanArgumentGrammarAction: '%s'.", name);
 	tArgument *argument = malloc(sizeof(tArgument));
-	argument->name = name;
+	argument->name = malloc(sizeof(char) * (strlen(name) + 1));
+	strcpy(argument->name, name);
 	argument->value = malloc(sizeof(boolean));
 	*(boolean *)argument->value = value;
 	return argument;
@@ -473,7 +489,8 @@ tArgument *ConcatenatedArgumentGrammarAction(char *name, tArgument *value)
 {
 	LogInfo("ConcatenatedArgumentGrammarAction: '%s'.", name);
 	tArgument *argument = malloc(sizeof(tArgument));
-	argument->name = name;
+	argument->name = malloc(sizeof(char) * (strlen(name) + 1));
+	strcpy(argument->name, name);
 	argument->value = value;
 	return argument;
 }

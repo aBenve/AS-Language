@@ -50,6 +50,7 @@
 %type <argumentList> argumentList
 %type <argument> argument
 %type <posToken> pItem
+%type <string> componentName
 
 
 %token <token> OPEN_PARENTHESIS
@@ -177,10 +178,13 @@
 		| component { $$ = SingleComponentListGrammarAction($1);  }
 		;
 
-	component: MODULE STRING OPEN_CURLY_BRACKET definition CLOSE_CURLY_BRACKET 	{ $$ = ComponentGrammarAction($2, $4);    }
+	component: MODULE componentName OPEN_CURLY_BRACKET definition CLOSE_CURLY_BRACKET 	{ $$ = ComponentGrammarAction($2, $4);    }
 		;
 
-	componentAsCanvas:	MODULE STRING AS CANVAS OPEN_CURLY_BRACKET definition CLOSE_CURLY_BRACKET { $$ = ComponentAsCanvasGrammarAction($2, $6);   }
+	componentAsCanvas:	MODULE componentName AS CANVAS OPEN_CURLY_BRACKET definition CLOSE_CURLY_BRACKET { $$ = ComponentAsCanvasGrammarAction($2, $6);   }
+		;
+
+	componentName: STRING { $$ = ComponentNameGrammarAction($1);  }
 		;
 
 	canvas: MODULE CANVAS OPEN_CURLY_BRACKET definition CLOSE_CURLY_BRACKET 	{ $$ = CanvasGrammarAction($4);   }
