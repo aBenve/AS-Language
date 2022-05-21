@@ -232,6 +232,7 @@ tPositionItem *PositionItemElementListGrammarAction(tPosToken *posToken, tElemen
 	positionItem->elements = elementList;
 	positionItem->variable = NULL;
 	positionItem->constant = NULL;
+	positionItem->next = NULL;
 	return positionItem;
 }
 tPositionItem *PositionItemVariableGrammarAction(tPosToken *posToken, tVariable *variable)
@@ -242,6 +243,7 @@ tPositionItem *PositionItemVariableGrammarAction(tPosToken *posToken, tVariable 
 	positionItem->elements = NULL;
 	positionItem->variable = variable;
 	positionItem->constant = NULL;
+	positionItem->next = NULL;
 	return positionItem;
 }
 tPositionItem *PositionItemConstantGrammarAction(tPosToken *posToken, tConstant *constant)
@@ -252,6 +254,7 @@ tPositionItem *PositionItemConstantGrammarAction(tPosToken *posToken, tConstant 
 	positionItem->elements = NULL;
 	positionItem->variable = NULL;
 	positionItem->constant = constant;
+	positionItem->next = NULL;
 	return positionItem;
 }
 
@@ -379,12 +382,10 @@ tScript *ScriptGrammarAction(char *jsCode)
 tElementHeader *MultipleElementListGrammarAction(tElementHeader *elementList, tElement *element)
 {
 	LogInfo("MultipleElementListGrammarAction: '%s'.", "multiple element list");
-	tElementHeader *elementHeader = malloc(sizeof(tElementHeader));
 	elementList->last->next = element;
-	elementHeader->last = element;
-	elementHeader->first = elementList->first;
-	elementHeader->size = elementList->size + 1;
-	return elementHeader;
+	elementList->last = element;
+	elementList->size++;
+	return elementList;
 }
 tElementHeader *OneElementListGrammarAction(tElement *element)
 {
@@ -458,12 +459,10 @@ tArgumentHeader *SingleArgumentGrammarAction(tArgument *value)
 tArgumentHeader *MultipleArgumentGrammarAction(tArgumentHeader *prevArguments, tArgument *value)
 {
 	LogInfo("MultipleArgumentGrammarAction: '%s'.", "multiple arguments");
-	tArgumentHeader *argumentHeader = malloc(sizeof(tArgumentHeader));
-	argumentHeader->last->next = value;
-	argumentHeader->last = value;
-	argumentHeader->first = prevArguments->first;
-	argumentHeader->size = prevArguments->size + 1;
-	return argumentHeader;
+	prevArguments->last->next = value;
+	prevArguments->last = value;
+	prevArguments->size++;
+	return prevArguments;
 }
 
 // Argument.
