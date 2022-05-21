@@ -7,7 +7,7 @@
 
 %union{
 	tComponent * component;
-	tComponent ** componentList;
+	tComponentHeader * componentList;
 	tModule * modules;
 	tComponentAsCanvas * componentAsCanvas;
 	tDefinition * definition;

@@ -42,9 +42,10 @@ tModule *CanvasModuleGrammarAction(tCanvas *canvas)
 	compAsCanvas->name = NULL;
 	compAsCanvas->definition = canvas->definition;
 	module->canvas = compAsCanvas;
+	module->components = NULL;
 	return module;
 }
-tModule *MultipleComponentModuleGrammarAction(tCanvas *canvas, tComponent **components)
+tModule *MultipleComponentModuleGrammarAction(tCanvas *canvas, tComponentHeader *components)
 {
 	LogInfo("MultipleComponentModuleGrammarAction: ", "Canvas");
 	tModule *module = malloc(sizeof(tModule));
@@ -64,30 +65,43 @@ tModule *ComponentAsCanvasModuleGrammarAction(tComponentAsCanvas *compAsCanvas)
 
 	return module;
 }
-tModule *MultipleComponentAsCanvasModuleGrammarAction(tComponentAsCanvas *compAsCanvas, tComponent **components)
+tModule *MultipleComponentAsCanvasModuleGrammarAction(tComponentAsCanvas *compAsCanvas, tComponentHeader *components)
 {
-	LogInfo("MultipleComponentAsCanvasModuleGrammarAction: Canvas.");
+	LogInfo("MultipleComponentAsCanvasModuleGrammarAction: %s.", compAsCanvas->name);
 	tModule *module = malloc(sizeof(tModule));
 	module->canvas = compAsCanvas;
 	module->components = components;
-
 	return module;
 }
 // ComponentList.
-tComponent **MultipleComponentListGrammarAction(tComponent **prevComponents, tComponent *component)
+tComponentHeader *MultipleComponentListGrammarAction(tComponentHeader *prevComponents, tComponent *component)
 {
 	LogInfo("MultipleComponentListGrammarAction: '%s'.", component->name);
 	// No importa si no esta bien ahora.
-	tComponent **components = malloc(sizeof(tComponent) * ((sizeof(prevComponents) / sizeof(tComponent *)) + 1));
-	memcpy(components, prevComponents, sizeof(prevComponents));
-	components[(sizeof(prevComponents) / sizeof(tComponent *))] = component;
+	// tComponent **components = malloc(sizeof(tComponent) * ((sizeof(prevComponents) / sizeof(tComponent *)) + 1));
+	// tComponent **components = malloc(sizeof(tComponent *) * ((sizeof(prevComponents) / sizeof(tComponent *)) + 1));
+	// memcpy(components, prevComponents, sizeof(prevComponents));
+	// components[(sizeof(prevComponents) / sizeof(tComponent *))] = component;
+
+	tComponentHeader *components = malloc(sizeof(tComponentHeader));
+
+	prevComponents->last->next = component;
+	component->next = NULL;
+
+	components->first = prevComponents->first;
+	components->size = prevComponents->size + 1;
+	components->last = component;
+
 	return components;
 }
-tComponent **SingleComponentListGrammarAction(tComponent *component)
+tComponentHeader *SingleComponentListGrammarAction(tComponent *component)
 {
 	LogInfo("SingleComponentListGrammarAction: '%s'.", component->name);
-	tComponent **components = malloc(sizeof(tComponent *));
-	components[0] = component;
+	tComponentHeader *components = malloc(sizeof(tComponentHeader));
+	component->next = NULL;
+	components->first = component;
+	components->last = component;
+	components->size = 1;
 	return components;
 }
 
@@ -99,6 +113,7 @@ tComponent *ComponentGrammarAction(char *name, tDefinition *definition)
 	component->name = malloc(sizeof(char) * (strlen(name) + 1));
 	strcpy(component->name, name);
 	component->definition = definition;
+	component->next = NULL;
 	return component;
 }
 

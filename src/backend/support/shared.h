@@ -106,7 +106,15 @@ typedef struct tComponent
 {
 	char *name;
 	tDefinition *definition;
+	struct tComponent *next;
 } tComponent;
+
+typedef struct tComponentHeader
+{
+	tComponent *first;
+	tComponent *last;
+	int size;
+} tComponentHeader;
 
 typedef struct tComponentAsCanvas
 {
@@ -122,7 +130,7 @@ typedef struct tCanvas
 typedef struct tModule
 {
 	tComponentAsCanvas *canvas;
-	tComponent **components;
+	tComponentHeader *components;
 } tModule;
 
 // Estado global de toda la aplicación.

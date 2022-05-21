@@ -19,13 +19,13 @@ tModule *ProgramModulesGrammarAction(tModule *module);
 
 // Module.
 tModule *CanvasModuleGrammarAction(tCanvas *canvas);
-tModule *MultipleComponentModuleGrammarAction(tCanvas *canvas, tComponent **components);
+tModule *MultipleComponentModuleGrammarAction(tCanvas *canvas, tComponentHeader *components);
 tModule *ComponentAsCanvasModuleGrammarAction(tComponentAsCanvas *compAsCanvas);
-tModule *MultipleComponentAsCanvasModuleGrammarAction(tComponentAsCanvas *compAsCanvas, tComponent **components);
+tModule *MultipleComponentAsCanvasModuleGrammarAction(tComponentAsCanvas *compAsCanvas, tComponentHeader *components);
 
 // ComponentList.
-tComponent **MultipleComponentListGrammarAction(tComponent **prevComponents, tComponent *component);
-tComponent **SingleComponentListGrammarAction(tComponent *component);
+tComponentHeader *MultipleComponentListGrammarAction(tComponentHeader *prevComponents, tComponent *component);
+tComponentHeader *SingleComponentListGrammarAction(tComponent *component);
 
 // Component.
 tComponent *ComponentGrammarAction(char *name, tDefinition *definition);
