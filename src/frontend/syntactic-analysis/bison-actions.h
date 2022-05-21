@@ -43,14 +43,14 @@ tDefinition *TemplateStyleDefinitionGrammarAction(tTemplate *template, tStyle *s
 tDefinition *TemplateScriptStyleDefinitionGrammarAction(tTemplate *template, tScript *script, tStyle *style);
 tDefinition *TemplateStyleScriptDefinitionGrammarAction(tTemplate *template, tStyle *style, tScript *script);
 // Template.
-tTemplate *TemplateGrammarAction(tPosition *positions);
+tTemplate *TemplateGrammarAction(tPositionHeader *positions);
 tTemplate *TemplateEmptyGrammarAction();
 // positioning.
-tPosition *SinglePositionItemGrammarAction(tPositionItem *element);
-tPosition *MultiplePositioningGrammarAction(tPosition *prevItems, tPositionItem *value);
+tPositionHeader *SinglePositionItemGrammarAction(tPositionItem *element);
+tPositionHeader *MultiplePositioningGrammarAction(tPositionHeader *prevItems, tPositionItem *value);
 
 // positionItem.
-tPositionItem *PositionItemElementListGrammarAction(tPosToken *token, tElementList *elementList);
+tPositionItem *PositionItemElementListGrammarAction(tPosToken *token, tElementHeader *elementList);
 tPositionItem *PositionItemVariableGrammarAction(tPosToken *token, tVariable *variable);
 tPositionItem *PositionItemConstantGrammarAction(tPosToken *token, tConstant *constant);
 
@@ -77,11 +77,11 @@ tStyle *StyleGrammarAction(char *cssCode);
 tScript *ScriptGrammarAction(char *jsCode);
 
 // ElementList.
-tElementList *MultipleElementListGrammarAction(tElementList *elementList, tElement *element);
-tElementList *OneElementListGrammarAction(tElement *element);
+tElementHeader *MultipleElementListGrammarAction(tElementHeader *elementList, tElement *element);
+tElementHeader *OneElementListGrammarAction(tElement *element);
 // Element.
 tElement *ElementGrammarAction(char *name);
-tElement *ElementWithArgumentsGrammarAction(char *name, tArgument **arguments);
+tElement *ElementWithArgumentsGrammarAction(char *name, tArgumentHeader *arguments);
 
 // Variable
 tVariable *DollarVariableGrammarAction(char *name);
@@ -90,8 +90,8 @@ tVariable *PropVariableGrammarAction(char *name);
 // Constant
 tConstant *ConstantGrammarAction(char *value);
 // ArgumentList.
-tArgument **SingleArgumentGrammarAction(tArgument *value);
-tArgument **MultipleArgumentGrammarAction(tArgument **prevArguments, tArgument *value);
+tArgumentHeader *SingleArgumentGrammarAction(tArgument *value);
+tArgumentHeader *MultipleArgumentGrammarAction(tArgumentHeader *prevArguments, tArgument *value);
 
 // Argument.
 tArgument *StringArgumentGrammarAction(char *name, char *value);

@@ -1,7 +1,5 @@
 #include "generator.h"
 
-#define HTML_INITIAL_SIZE 100
-
 /**
  * Implementación de "generator.h".
  */

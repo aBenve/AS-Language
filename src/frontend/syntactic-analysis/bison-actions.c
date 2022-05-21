@@ -187,7 +187,7 @@ tDefinition *TemplateStyleScriptDefinitionGrammarAction(tTemplate *template, tSt
 	return TemplateScriptStyleDefinitionGrammarAction(template, script, style);
 }
 // Template.
-tTemplate *TemplateGrammarAction(tPosition *positions)
+tTemplate *TemplateGrammarAction(tPositionHeader *positions)
 {
 	LogInfo("TemplateGrammarAction: '%s'.", "template");
 	tTemplate *template = malloc(sizeof(tTemplate));
@@ -203,26 +203,28 @@ tTemplate *TemplateEmptyGrammarAction()
 }
 
 // positioning.
-tPosition *SinglePositionItemGrammarAction(tPositionItem *positionItem)
+tPositionHeader *SinglePositionItemGrammarAction(tPositionItem *positionItem)
 {
 	LogInfo("SinglePositionItemGrammarAction: '%s'.", "single position item");
-	tPosition *position = malloc(sizeof(tPosition));
-	position->items = malloc(sizeof(tPositionItem *));
-	position->items[0] = positionItem;
-	return position;
+	tPositionHeader *positions = malloc(sizeof(tPositionHeader));
+	positionItem->next = NULL;
+	positions->first = positionItem;
+	positions->last = positionItem;
+	positions->size = 1;
+	return positions;
 }
-tPosition *MultiplePositioningGrammarAction(tPosition *prevItems, tPositionItem *newPos)
+tPositionHeader *MultiplePositioningGrammarAction(tPositionHeader *prevItems, tPositionItem *newPos)
 {
 	LogInfo("MultiplePositioningGrammarAction: '%s'.", "multiple position items");
-	tPosition *position = malloc(sizeof(tPosition));
-	position->items = malloc(sizeof(tPositionItem) * ((sizeof(prevItems->items) / sizeof(tPositionItem)) + 1));
-	memcpy(position->items, prevItems->items, sizeof(prevItems->items));
-	position->items[(sizeof(prevItems->items) / sizeof(tPositionItem))] = newPos;
-	return position;
+	prevItems->last->next = newPos;
+	newPos->next = NULL;
+	prevItems->last = newPos;
+	prevItems->size++;
+	return prevItems;
 }
 
 // positionItem.
-tPositionItem *PositionItemElementListGrammarAction(tPosToken *posToken, tElementList *elementList)
+tPositionItem *PositionItemElementListGrammarAction(tPosToken *posToken, tElementHeader *elementList)
 {
 	LogInfo("PositionItemElementListGrammarAction: '%d'.", posToken->token);
 	tPositionItem *positionItem = malloc(sizeof(tPositionItem));
@@ -374,22 +376,24 @@ tScript *ScriptGrammarAction(char *jsCode)
 }
 
 // ElementList.
-tElementList *MultipleElementListGrammarAction(tElementList *elementList, tElement *element)
+tElementHeader *MultipleElementListGrammarAction(tElementHeader *elementList, tElement *element)
 {
 	LogInfo("MultipleElementListGrammarAction: '%s'.", "multiple element list");
-	tElementList *newElementList = malloc(sizeof(tElementList));
-	newElementList->elements = malloc(sizeof(tElement *) * ((sizeof(elementList->elements) / sizeof(tElement *)) + 1));
-	memcpy(newElementList->elements, elementList->elements, sizeof(elementList->elements));
-	newElementList->elements[(sizeof(elementList->elements) / sizeof(tElement *))] = element;
-	return newElementList;
+	tElementHeader *elementHeader = malloc(sizeof(tElementHeader));
+	elementList->last->next = element;
+	elementHeader->last = element;
+	elementHeader->first = elementList->first;
+	elementHeader->size = elementList->size + 1;
+	return elementHeader;
 }
-tElementList *OneElementListGrammarAction(tElement *element)
+tElementHeader *OneElementListGrammarAction(tElement *element)
 {
 	LogInfo("OneElementListGrammarAction: '%s'.", element->name);
-	tElementList *elementList = malloc(sizeof(tElementList));
-	elementList->elements = malloc(sizeof(tElement *));
-	elementList->elements[0] = element;
-	return elementList;
+	tElementHeader *elementHeader = malloc(sizeof(tElementHeader));
+	elementHeader->first = element;
+	elementHeader->last = element;
+	elementHeader->size = 1;
+	return elementHeader;
 }
 // Element.
 tElement *ElementGrammarAction(char *name)
@@ -401,7 +405,7 @@ tElement *ElementGrammarAction(char *name)
 	element->arguments = NULL;
 	return element;
 }
-tElement *ElementWithArgumentsGrammarAction(char *name, tArgument **arguments)
+tElement *ElementWithArgumentsGrammarAction(char *name, tArgumentHeader *arguments)
 {
 	LogInfo("ElementWithArgumentsGrammarAction: '%s'.", name);
 	tElement *element = malloc(sizeof(tElement));
@@ -442,20 +446,24 @@ tConstant *ConstantGrammarAction(char *value)
 }
 
 // ArgumentList.
-tArgument **SingleArgumentGrammarAction(tArgument *value)
+tArgumentHeader *SingleArgumentGrammarAction(tArgument *value)
 {
 	LogInfo("SingleArgumentGrammarAction: '%s'.", "single argument");
-	tArgument **arguments = malloc(sizeof(tArgument));
-	arguments[0] = value;
-	return arguments;
+	tArgumentHeader *argumentHeader = malloc(sizeof(tArgumentHeader));
+	argumentHeader->first = value;
+	argumentHeader->last = value;
+	argumentHeader->size = 1;
+	return argumentHeader;
 }
-tArgument **MultipleArgumentGrammarAction(tArgument **prevArguments, tArgument *value)
+tArgumentHeader *MultipleArgumentGrammarAction(tArgumentHeader *prevArguments, tArgument *value)
 {
 	LogInfo("MultipleArgumentGrammarAction: '%s'.", "multiple arguments");
-	tArgument **arguments = malloc(sizeof(tArgument) * ((sizeof(prevArguments) / sizeof(tArgument)) + 1));
-	memcpy(arguments, prevArguments, sizeof(prevArguments));
-	arguments[(sizeof(prevArguments) / sizeof(tArgument))] = value;
-	return arguments;
+	tArgumentHeader *argumentHeader = malloc(sizeof(tArgumentHeader));
+	argumentHeader->last->next = value;
+	argumentHeader->last = value;
+	argumentHeader->first = prevArguments->first;
+	argumentHeader->size = prevArguments->size + 1;
+	return argumentHeader;
 }
 
 // Argument.

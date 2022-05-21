@@ -13,14 +13,14 @@
 	tDefinition * definition;
 	tCanvas * canvas;
 	tArgument * argument;
-	tArgument ** argumentList;
+	tArgumentHeader * argumentList;
 	tVariable * variable;
 	tConstant * constant;
 	tElement * element;
-	tElementList * elementList;
+	tElementHeader * elementList;
 	tPosToken * posToken;
 	tPositionItem * positionItem;
-	tPosition * positioning;
+	tPositionHeader * positioning;
 	tTemplate * template;
 	tStyle * style;
 	tScript * script;

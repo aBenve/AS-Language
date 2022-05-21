@@ -38,8 +38,15 @@ typedef struct tArgument
 {
 	char *name;
 	void *value;
+	struct tArgument *next;
 } tArgument;
 
+typedef struct tArgumentHeader
+{
+	int size;
+	tArgument *first;
+	tArgument *last;
+} tArgumentHeader;
 typedef struct tVariable
 {
 	char *name;
@@ -55,14 +62,17 @@ typedef struct tConstant
 typedef struct tElement
 {
 	char *name;
-	tArgument **arguments;
+	tArgumentHeader *arguments;
+	struct tElement *next;
 } tElement;
 
-typedef struct tElementList
+typedef struct tElementHeader
 {
-	tElement **elements;
+	tElement *first;
+	tElement *last;
+	int size;
 
-} tElementList;
+} tElementHeader;
 
 typedef struct tPosToken
 {
@@ -74,13 +84,16 @@ typedef struct tPositionItem
 	tPosToken *posToken;
 	tVariable *variable; // Solo puede tener 1 de estos 3 valores.
 	tConstant *constant;
-	tElementList *elements;
+	tElementHeader *elements;
+	struct tPositionItem *next;
 } tPositionItem;
 
-typedef struct tPosition
+typedef struct tPositionHeader
 {
-	tPositionItem **items;
-} tPosition;
+	tPositionItem *first;
+	tPositionItem *last;
+	int size;
+} tPositionHeader;
 
 typedef struct tStyle
 {
@@ -93,7 +106,7 @@ typedef struct tScript
 
 typedef struct tTemplate
 {
-	tPosition *positions;
+	tPositionHeader *positions;
 } tTemplate;
 typedef struct tDefinition
 {
