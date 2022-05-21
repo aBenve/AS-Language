@@ -4,7 +4,7 @@
 #include "frontend/syntactic-analysis/bison-actions.h"
 #include "frontend/syntactic-analysis/bison-parser.h"
 #include <stdio.h>
-
+#include "backend/semantic-analysis/analizator.h"
 // Estado de la aplicación.
 CompilerState state;
 
@@ -32,6 +32,7 @@ const int main(const int argumentCount, const char **arguments)
 			LogInfo("La compilacion fue exitosa. 😃😃😃 ");
 			// analizador semantico va aca y tiene que recibir el arbol.
 			// state.result es el puntero a la estructura del programa
+			Analice(state.result);
 			Generator(state.result);
 		}
 		else
