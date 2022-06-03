@@ -7,5 +7,5 @@ module miElemento as Canvas {
         let miVariable
         if(flag)
             miVariable = "TRUE!!"
-    js}
+    }js
 }

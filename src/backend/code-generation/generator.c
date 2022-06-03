@@ -13,6 +13,7 @@ void Generator(tModule *result)
 	}
 
 	// LogInfo("%d", result->components->size);
+	printf("Generador de codigo\n");
 
 	int componentsAmount = result->components == NULL ? 0 : result->components->size;
 
@@ -20,21 +21,37 @@ void Generator(tModule *result)
 	tComponentCode *canvasCode = malloc(sizeof(tComponentCode *));
 
 	// primero el canvas que se que esta siempre
-	canvasCode = generateCanvas(result->canvas);
+	printf("Generadando Canvas\n");
+	canvasCode = generateCanvas(result->canvas, result);
 	// Puede ser que no haya ningun componente
-	componentsCode = result->components == NULL ? NULL : generateComponents(result->components->first, componentsAmount);
+	if (componentsAmount > 0)
+	{
+		printf("Generando Componentes\n");
+		componentsCode = generateComponents(result->components->first, componentsAmount);
+	}
+	// componentsCode = result->components == NULL ? NULL : generateComponents(result->components->first, componentsAmount);
+
+	// printf("ESTO : %s\n", result->components->first->definition->style->content);
 
 	LogInfo("Generando codigo intermedio...");
 	printf("<!DOCTYPE html>\n<html>\n<head>\n<title>Intermediate Code</title>\n");
 
+	printf("<style>\n");
+
 	// css
 	printCanvasCss(canvasCode);
 	printCss(componentsCode, componentsAmount);
+	printf("</style>\n");
 
 	printf("</head>\n");
 	printf("<body>\n");
 	printf("<div id=\"app\">\n");
 	// html
+
+	printCanvasHTML(canvasCode);
+
+	printf("</div>\n");
+
 	printf("<script>\n");
 
 	// js
@@ -44,6 +61,11 @@ void Generator(tModule *result)
 	printf("</script>\n");
 	printf("</body>\n");
 	printf("</html>\n");
+
+	// libero memoria
+	free(componentsCode);
+	free(canvasCode);
+	// exit(0);
 }
 
 /*

@@ -83,6 +83,9 @@ tElementHeader *OneElementListGrammarAction(tElement *element);
 tElement *ElementGrammarAction(char *name);
 tElement *ElementWithArgumentsGrammarAction(char *name, tArgumentHeader *arguments);
 
+// ElementName
+char *ElementNameGrammarAction(char *name);
+
 // Variable
 tVariable *DollarVariableGrammarAction(char *name);
 tVariable *PropVariableGrammarAction(char *name);

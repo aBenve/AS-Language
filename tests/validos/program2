@@ -2,5 +2,9 @@ module Canvas {
     Template: {
         top:"Mi super elemento"
     }
-    Style:css{css}
+    Style:css{ 
+        #a{
+            color: red;
+        }
+     }css
 }

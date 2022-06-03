@@ -7,5 +7,5 @@ module miElemento as Canvas {
         let miVariable
         if(count < 0)
             miVariable = "negativo"
-    js}
+    }js
 }

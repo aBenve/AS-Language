@@ -17,22 +17,24 @@
 %option yylineno
 
 /* Patrones reutilizables. */
-crlf			\r\n
 digit			[0-9]
 float           [0-9]+\.[0-9]*
 boolean          (true|false)
-endline			\n
 whitespace		[ \f\n\r\t\v]
 
-jsCode          js\{(.|\n)*js\}
-
-cssCode         css\{(.|\n)*css\}
+/*cssCode         (.|\n)+?(?=\}js)*/
+/*jsCode          (.|\n)+?(?=\}js)*/
 
 word            [a-zA-Z][a-zA-Z0-9_]*
 text            \"(.*?)\"
 
+
+/* Contextos */
+
 %%
 
+
+<INITIAL>{
 "("											{ return OpenParenthesisPatternAction(); }
 ")"											{ return CloseParenthesisPatternAction(); }
 
@@ -76,8 +78,92 @@ text            \"(.*?)\"
 "Script"                                        { return ScriptPatternAction(); }
 "Style"                                         { return StylePatternAction(); }
 
-{cssCode}                                       { return CssCodePatternAction(yytext); }
-{jsCode}                                        { return JsCodePatternAction(yytext); }
+"css{"                                          { printf("BEGIN CSS\n");
+
+                                                    char *css = malloc(sizeof(char) * INITIAL_BUFFER_SIZE);
+                                                    char c = input();
+                                                    int use = 0;
+                                                    int size = INITIAL_BUFFER_SIZE;
+                                                    char auxC;
+                                                    while (true)
+                                                    {
+                                                        if (c == '}')
+                                                        {   
+                                                            auxC = c;
+                                                            if ((c = input()) == 'c')
+                                                            {
+                                                                auxC = c;
+
+                                                                if ((c = input()) == 's')
+                                                                {
+                                                                    auxC = c;
+
+                                                                    if ((c = input()) == 's')
+                                                                    {
+                                                                        printf("END CSS\n");
+                                                                        return CssCodePatternAction(css);
+                                                                    }
+                                                                    unput(c);
+                                                                }
+                                                                unput(c);
+                                                            } 
+                                                            unput(c);
+                                                            // Guarde el valor de c ya que al hacer unput no lo puedo volver a restaurar
+                                                            c = auxC;
+                                                        }
+                                                        if (c == EOF)
+                                                        {
+                                                            strcpy(css, "error");
+                                                            return CssCodePatternAction(css);
+                                                        }
+                                                        if (use == size)
+                                                        {
+                                                            css = realloc(css, sizeof(char) + strlen(css) + INITIAL_BUFFER_SIZE);
+                                                            size += INITIAL_BUFFER_SIZE;
+                                                        }
+                                                        css[use++] = c;
+                                                        c = input();
+                                                    }
+    }
+
+"js{"                                           { 
+                                                        printf("BEGIN JS\n");
+                                                        char *js = malloc(sizeof(char) * INITIAL_BUFFER_SIZE);
+                                                        char c = input();
+                                                        char auxC = 0;
+                                                        int use = 0;
+                                                        int size = INITIAL_BUFFER_SIZE;
+                                                        while(true)
+                                                        {
+                                                            if(c == '}'){
+                                                                auxC = c;
+                                                                if((c = input()) == 'j'){
+                                                                    auxC = c;
+                                                                    if((c = input()) == 's'){
+                                                                        printf("END JS\n");
+                                                                        printf("js-end: %s\n", js);
+                                                                        return JsCodePatternAction(js);
+                                                                    }
+                                                                    unput(c);
+                                                                }
+                                                                unput(c);
+                                                                // Guarde el valor de c ya que al hacer unput no lo puedo volver a restaurar
+                                                                c = auxC;
+                                                            }
+                                                            if(c == EOF){
+                                                                    strcpy(js, "error");
+                                                                    return JsCodePatternAction("error");
+                                                            }
+                                                            if (use == size)
+                                                            {
+                                                                js = realloc(js, sizeof(char) + strlen(js) + INITIAL_BUFFER_SIZE);
+                                                                size += INITIAL_BUFFER_SIZE;
+                                                            }
+                                                            js[use++] = c;
+                                                            c = input();
+                                                        }
+                                            }
+
 
 {boolean}                                      { return BooleanPatternAction(yytext); }
 
@@ -90,5 +176,6 @@ text            \"(.*?)\"
 {whitespace}								{ IgnoredPatternAction(yytext); }
 
 .											{ return UnknownPatternAction(yytext); }
+}
 
 %%

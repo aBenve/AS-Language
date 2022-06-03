@@ -5,6 +5,8 @@
 #include "../../backend/support/logger.h"
 #include "../syntactic-analysis/bison-parser.h"
 
+#define INITIAL_BUFFER_SIZE 50
+
 // ! Quiza sirva para el backend.
 // extern tYYSTYPE yylval;
 /**

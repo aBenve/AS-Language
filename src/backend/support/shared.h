@@ -15,6 +15,9 @@ extern FILE *yyout;
 // Variable global que contiene el número de la línea analizada.
 extern int yylineno;
 
+// Longitud de la cadena yytext
+extern int yyleng;
+
 // Token actual en el tope de la pila del analizador Bison.
 extern char *yytext;
 

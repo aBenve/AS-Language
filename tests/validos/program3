@@ -2,5 +2,5 @@ module miElemento as Canvas {
     Template: {
         top:"Mi super elemento"
     }
-    Script:js{js}
+    Script:js{}js
 }

@@ -4,5 +4,5 @@ module miElemento as Canvas {
     }
     Script:js{
         let myList = [Element("elemento 1"), Element("elemento 2")]
-    js}
+    }js
 }

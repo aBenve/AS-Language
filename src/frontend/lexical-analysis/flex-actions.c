@@ -175,6 +175,7 @@ yytoken_kind_t JsCodePatternAction(char *lexeme)
 }
 yytoken_kind_t CssCodePatternAction(char *lexeme)
 {
+
 	LogDebug("CssCodePatternAction: %s", lexeme);
 	yylval.string = lexeme;
 	return CSS_CODE;

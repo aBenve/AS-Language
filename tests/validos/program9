@@ -1,12 +1,17 @@
 module miElemento as Canvas {
     Template: {
-        top:[otroElemento]
+        top:[otroElemento] 
     }
+    Style:css{
+        color:red;    
+    }css
 }
 
 
 module otroElemento{
-    Template: {}
+    Template: {
+        bottom:"hola"
+    }
     Script: js{
         
         let list = []
@@ -15,5 +20,5 @@ module otroElemento{
             list.add(`Product n°${i}`)
         }
         list.mapToElement("top" ,s -> Element(content: s, background: Color("green")))
-    js}
+    }js
 }

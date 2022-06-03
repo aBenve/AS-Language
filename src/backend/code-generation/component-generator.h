@@ -9,17 +9,25 @@ typedef struct tComponentCode
     char *html;
 } tComponentCode;
 
-tComponentCode *generateCanvas(tComponentAsCanvas *canvas);
+typedef struct HTMLCode
+{
+    char *html;
+    int size;
+    int used;
+} HTMLCode;
+
+tComponentCode *generateCanvas(tComponentAsCanvas *canvas, tModule *root);
 void printCanvasJs(tComponentCode *code);
 void printCanvasCss(tComponentCode *code);
+void printCanvasHTML(tComponentCode *code);
 void printJs(tComponentCode **code, int count);
 void printCss(tComponentCode **code, int count);
 tComponentCode **generateComponents(tComponent *component, int componentAmount);
 int hasScript(tComponentCode *code);
 int hasStyle(tComponentCode *code);
-tComponentCode *generateComponentCode(tDefinition *definition);
+tComponentCode *generateComponentCode(tComponent *component);
 char *generateScriptCode(tScript *script);
-char *generateStyleCode(tStyle *style);
-char *generateHTMLCode(tTemplate *template);
+char *generateStyleCode(tStyle *style, char *id);
+HTMLCode *generateHTMLCode(tComponent *component, tModule *root);
 
 #endif

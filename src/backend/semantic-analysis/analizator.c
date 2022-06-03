@@ -47,7 +47,18 @@ void firstGenRepare(tModule *root)
     }
 }
 
+void secondGenRepare(tModule *root)
+{
+}
+
 void Analice(tModule *root)
 {
-    firstGenRepare(root);
+    // Saco los js{ js } y los css{ css }
+    // firstGenRepare(root);
+
+    // Analizo si los nombres se guardaron bien y los tamanios
+    // secondGenRepare(root);
+
+    // Aseguro que todas las variables usadas esten definidas
+    // trirdGenRepare(root);
 }

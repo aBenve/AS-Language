@@ -121,8 +121,10 @@ tComponent *ComponentGrammarAction(char *name, tDefinition *definition)
 char *ComponentNameGrammarAction(char *name)
 {
 	LogInfo("ComponentNameGrammarAction: '%s'.", name);
-	char *componentName = malloc(sizeof(char) * (strlen(name) + 1));
+	// char *componentName = malloc(sizeof(char) * yyleng);
+	char *componentName = malloc(sizeof(char) * strlen(name) + 1);
 	strcpy(componentName, name);
+	// strncpy(componentName, name, yyleng);
 	return componentName;
 }
 // Canvas.
@@ -365,6 +367,7 @@ tStyle *StyleGrammarAction(char *cssCode)
 	tStyle *style = malloc(sizeof(tStyle));
 	style->content = malloc(sizeof(char) * (strlen(cssCode) + 1));
 	strcpy(style->content, cssCode);
+	free(cssCode);
 	return style;
 }
 
@@ -399,21 +402,34 @@ tElementHeader *OneElementListGrammarAction(tElement *element)
 // Element.
 tElement *ElementGrammarAction(char *name)
 {
-	LogInfo("ElementGrammarAction: '%s'.", name);
+	LogInfo("ElementGrammarAction: '%s', size: %d.", name, yyleng);
 	tElement *element = malloc(sizeof(tElement));
-	element->name = malloc(strlen(name) + 1);
+	// element->name = malloc(yyleng + 1);
+	element->name = malloc(sizeof(char) * (yyleng + 1));
 	strcpy(element->name, name);
+	// strncpy(element->name, name, yyleng);
 	element->arguments = NULL;
 	return element;
 }
 tElement *ElementWithArgumentsGrammarAction(char *name, tArgumentHeader *arguments)
 {
-	LogInfo("ElementWithArgumentsGrammarAction: '%s'.", name);
+	LogInfo("ElementWithArgumentsGrammarAction: 's'.", name);
 	tElement *element = malloc(sizeof(tElement));
-	element->name = malloc(sizeof(char) * (strlen(name) + 1));
+	// element->name = malloc(sizeof(char) * yyleng);
+	element->name = malloc(sizeof(char) * strlen(name) + 1);
 	strcpy(element->name, name);
+	// strncpy(element->name, name, yyleng);
 	element->arguments = arguments;
 	return element;
+}
+// ElementName
+
+char *ElementNameGrammarAction(char *name)
+{
+	LogInfo("ElementNameGrammarAction: '%s', Size: %d.", name, yyleng);
+	char *elementName = malloc(sizeof(char) * strlen(name) + 1);
+	strcpy(elementName, name);
+	return elementName;
 }
 
 // Variable
@@ -421,17 +437,23 @@ tVariable *DollarVariableGrammarAction(char *name)
 {
 	LogInfo("DollarVariableGrammarAction: '%s'.", name);
 	tVariable *variable = malloc(sizeof(tVariable));
-	variable->name = malloc(sizeof(char) * (strlen(name) + 1));
+	// variable->name = malloc(sizeof(char) * yyleng);
+	variable->name = malloc(sizeof(char) * strlen(name) + 1);
 	strcpy(variable->name, name);
+	// strncpy(variable->name, name, yyleng);
 	variable->type = VARIABLE_TYPE_DOLLAR;
 	return variable;
 }
 tVariable *PropVariableGrammarAction(char *name)
 {
 	LogInfo("PropVariableGrammarAction: '%s'.", name);
+
 	tVariable *variable = malloc(sizeof(tVariable));
-	variable->name = malloc(sizeof(char) * (strlen(name) + 1));
+	variable->name = malloc(sizeof(char) * strlen(name) + 1);
+
+	// variable->name = malloc(sizeof(char) * yyleng);
 	strcpy(variable->name, name);
+	// strncpy(variable->name, name, yyleng);
 	variable->type = VARIABLE_TYPE_PROP;
 	return variable;
 }
@@ -441,7 +463,9 @@ tConstant *ConstantGrammarAction(char *value)
 {
 	LogInfo("ConstantGrammarAction: '%s'.", value);
 	tConstant *constant = malloc(sizeof(tConstant));
-	constant->value = malloc(sizeof(char) * (strlen(value) + 1));
+	// constant->value = malloc(sizeof(char) * yyleng);
+	constant->value = malloc(sizeof(char) * strlen(value) + 1);
+	// strncpy(constant->value, value, yyleng);
 	strcpy(constant->value, value);
 	return constant;
 }

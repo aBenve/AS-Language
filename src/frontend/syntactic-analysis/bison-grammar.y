@@ -51,6 +51,7 @@
 %type <argument> argument
 %type <posToken> pItem
 %type <string> componentName
+%type <string> elementName
 
 
 %token <token> OPEN_PARENTHESIS
@@ -238,9 +239,13 @@
 		| element { $$ = OneElementListGrammarAction($1);  }
 		;
 
-	element: STRING { $$ = ElementGrammarAction($1);  }
-		| STRING OPEN_PARENTHESIS argumentList CLOSE_PARENTHESIS { $$ = ElementWithArgumentsGrammarAction($1, $3);  }
+	element: elementName { $$ = ElementGrammarAction($1);  }
+		| elementName OPEN_PARENTHESIS argumentList CLOSE_PARENTHESIS { $$ = ElementWithArgumentsGrammarAction($1, $3);  }
 		;
+
+	elementName: STRING { $$ = ElementNameGrammarAction($1);  }
+		;
+
 	variable: DOLLAR OPEN_CURLY_BRACKET STRING CLOSE_CURLY_BRACKET { $$ = DollarVariableGrammarAction($3);  }
 		| PROPS DOT STRING { $$ = PropVariableGrammarAction($3);  }
 		;

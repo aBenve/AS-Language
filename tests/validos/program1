@@ -1,21 +1,34 @@
 module Canvas {
     Template: {
-        rightCenter:[a,v],
+        rightCenter:[a],
         center:[b],
         leftCenter:[c]
     }
+    Style: css{
+        #a{
+            color: red;
+        }
+        #b{
+            color: blue;
+        }
+        #c{
+            color: green;
+        }
+    }css
 }
 
 module a {
     Template:{
         children:"soy a"
     }
+    
 }
 
 module b{
     Template:{
         children:"soy b"
     }
+    Style: css{}css
 }
 
 module c {

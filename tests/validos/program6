@@ -1,24 +1,24 @@
 module miElemento as Canvas {
     Template: {
         top:[a],
-        bottom: props.hola
+        bottomRight: props.hola
     }
 }
 
 module a {
     Template: {
-        top: [b]
+        right: [b]
     }
 }
 
 module b {
     Template: {
-        top: [c]
+        left: [c]
     }
 }
 
 module c {
     Template: {
-        top: "Hola!"
+        bottom: "Hola!"
     }
 }
