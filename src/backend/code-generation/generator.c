@@ -17,8 +17,8 @@ void Generator(tModule *result)
 
 	int componentsAmount = result->components == NULL ? 0 : result->components->size;
 
-	tComponentCode **componentsCode = malloc(sizeof(tComponentCode *) * componentsAmount);
-	tComponentCode *canvasCode = malloc(sizeof(tComponentCode *));
+	tComponentCode **componentsCode = NULL;
+	tComponentCode *canvasCode = NULL;
 
 	// primero el canvas que se que esta siempre
 	printf("Generadando Canvas\n");
@@ -63,9 +63,24 @@ void Generator(tModule *result)
 	printf("</html>\n");
 
 	// libero memoria
+	for (int i = 0; i < componentsAmount; i++)
+	{
+		if (componentsCode[i]->script != NULL)
+			free(componentsCode[i]->script);
+		if (componentsCode[i]->style != NULL)
+			free(componentsCode[i]->style);
+
+		free(componentsCode[i]->html);
+		free(componentsCode[i]);
+	}
 	free(componentsCode);
+
+	if (canvasCode->script != NULL)
+		free(canvasCode->script);
+	if (canvasCode->style != NULL)
+		free(canvasCode->style);
+	free(canvasCode->html);
 	free(canvasCode);
-	// exit(0);
 }
 
 /*

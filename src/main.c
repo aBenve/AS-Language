@@ -5,6 +5,7 @@
 #include "frontend/syntactic-analysis/bison-parser.h"
 #include <stdio.h>
 #include "backend/semantic-analysis/analizator.h"
+#include "backend/free-allocated-mem/freeTree.h"
 // Estado de la aplicación.
 CompilerState state;
 
@@ -23,6 +24,8 @@ const int main(const int argumentCount, const char **arguments)
 
 	// Compilar el programa de entrada.
 	LogInfo("Compilando...\n");
+
+	// ! Valgrind me dice que yyparse() likea memoria.
 	const int result = yyparse();
 	switch (result)
 	{
@@ -30,8 +33,6 @@ const int main(const int argumentCount, const char **arguments)
 		if (state.succeed)
 		{
 			LogInfo("La compilacion fue exitosa. 😃😃😃 ");
-			// analizador semantico va aca y tiene que recibir el arbol.
-			// state.result es el puntero a la estructura del programa
 			Analice(state.result);
 			Generator(state.result);
 		}
@@ -51,5 +52,7 @@ const int main(const int argumentCount, const char **arguments)
 		LogError("Error desconocido mientras se ejecutaba el analizador Bison (codigo %d).", result);
 	}
 	LogInfo("Fin.");
+	// no olvidar liberar memoria del arbol de sintaxis.
+	freeTree(state.result);
 	return result;
 }

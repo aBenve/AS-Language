@@ -1,20 +1,5 @@
 #include "analizator.h"
 
-#define JS_OPEN_AND_CLOSE 3
-#define CSS_OPEN_AND_CLOSE 4
-
-void repareJsCode(tScript *code)
-{
-    code->content += JS_OPEN_AND_CLOSE;
-    code->content[strlen(code->content) - JS_OPEN_AND_CLOSE] = '\0';
-}
-
-void repareCssCode(tStyle *code)
-{
-    code->content += CSS_OPEN_AND_CLOSE;
-    code->content[strlen(code->content) - CSS_OPEN_AND_CLOSE] = '\0';
-}
-
 int hasScriptDef(tDefinition *def)
 {
     return def->script != NULL;
@@ -24,41 +9,62 @@ int hasStyleDef(tDefinition *def)
     return def->style != NULL;
 }
 
-// Repare unsolved issues like js{js} and css{css}
-void firstGenRepare(tModule *root)
+typedef struct tJsVariable
 {
-    // Reparo canvas
-    printf("Reparando canvas\n");
-    if (hasScriptDef(root->canvas->definition) == 1)
-        repareJsCode(root->canvas->definition->script);
-    if (hasStyleDef(root->canvas->definition) == 1)
-        repareCssCode(root->canvas->definition->style);
+    char *name;
+    char *value;
+} tJsVariable;
 
-    // Reparo componentes
-    printf("Reparando componentes\n");
-    tComponent *aux = root->components != NULL ? root->components->first : NULL;
-    while (aux != NULL)
+tJsVariable **createVarList(tScript *script)
+{
+    tJsVariable **list = NULL;
+    printf("Creando lista de variables\n");
+    char *aux = calloc(strlen(script->content) + 1, sizeof(char));
+    strcpy(aux, script->content);
+    int i = 0;
+    int varAmount = 0;
+    while (aux[i] != '\0')
     {
-        if (hasScriptDef(aux->definition) == 1)
-            repareJsCode(aux->definition->script);
-        if (hasStyleDef(aux->definition) == 1)
-            repareCssCode(aux->definition->style);
-        aux = aux->next;
+        // printf("aca: %c\n", aux[i]);
+        if (aux[i] == '_')
+        {
+            if (aux[i + 1] != '\0' && aux[i + 1] != '_')
+            {
+                varAmount++;
+                // recorro hasta el final del string y lo hguardo como nombre de variable
+                int j = i + 1;
+                while (aux[j] != '\0' && aux[j] != '=' && aux[j] != ';')
+                {
+                    // TODO me sirve esto?
+                    j++;
+                }
+            }
+        }
+
+        i++;
     }
+    free(aux);
+    return list;
 }
 
-void secondGenRepare(tModule *root)
+// Check if the script code has all the variables used in the template code and check if the variables used in template are defined in other components or in the script code
+void thirdGenRepare(tModule *root)
 {
+    // 1) Save all the variables define in script code
+    tJsVariable **varList = NULL;
+    if (hasScriptDef(root->canvas->definition) == 1)
+        varList = createVarList(root->canvas->definition->script);
+    return;
 }
 
 void Analice(tModule *root)
 {
-    // Saco los js{ js } y los css{ css }
+    // Saco los js{ js } y los css{ css } -> * YA NO ES NECESARIO
     // firstGenRepare(root);
 
     // Analizo si los nombres se guardaron bien y los tamanios
     // secondGenRepare(root);
 
     // Aseguro que todas las variables usadas esten definidas
-    // trirdGenRepare(root);
+    // thirdGenRepare(root);
 }

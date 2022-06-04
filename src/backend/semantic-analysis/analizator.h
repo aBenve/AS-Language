@@ -7,10 +7,7 @@
 
 int hasStyleDef(tDefinition *def);
 int hasScriptDef(tDefinition *def);
-void repareCssCode(tStyle *code);
-void repareJsCode(tScript *code);
 
-void firstGenRepare(tModule *root);
 void Analice(tModule *root);
 
 #endif

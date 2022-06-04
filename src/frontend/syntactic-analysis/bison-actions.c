@@ -41,6 +41,7 @@ tModule *CanvasModuleGrammarAction(tCanvas *canvas)
 	tComponentAsCanvas *compAsCanvas = (tComponentAsCanvas *)malloc(sizeof(tComponentAsCanvas));
 	compAsCanvas->name = NULL;
 	compAsCanvas->definition = canvas->definition;
+	free(canvas);
 	module->canvas = compAsCanvas;
 	module->components = NULL;
 	return module;
@@ -52,6 +53,7 @@ tModule *MultipleComponentModuleGrammarAction(tCanvas *canvas, tComponentHeader 
 	tComponentAsCanvas *compAsCanvas = (tComponentAsCanvas *)malloc(sizeof(tComponentAsCanvas));
 	compAsCanvas->name = NULL;
 	compAsCanvas->definition = canvas->definition;
+	free(canvas);
 	module->canvas = compAsCanvas;
 	module->components = components;
 	return module;
@@ -92,13 +94,14 @@ tComponentHeader *MultipleComponentListGrammarAction(tComponentHeader *prevCompo
 	components->size = prevComponents->size + 1;
 	components->last = component;
 
+	free(prevComponents);
+
 	return components;
 }
 tComponentHeader *SingleComponentListGrammarAction(tComponent *component)
 {
 	LogInfo("SingleComponentListGrammarAction: '%s'.", component->name);
 	tComponentHeader *components = malloc(sizeof(tComponentHeader));
-	component->next = NULL;
 	components->first = component;
 	components->last = component;
 	components->size = 1;
@@ -110,7 +113,8 @@ tComponent *ComponentGrammarAction(char *name, tDefinition *definition)
 {
 	LogInfo("ComponentGrammarAction: '%s'.", name);
 	tComponent *component = malloc(sizeof(tComponent));
-	component->name = malloc(sizeof(char) * (strlen(name) + 1));
+	// component->name = malloc(sizeof(char) * (strlen(name) + 1));
+	component->name = name; // El espacio viene guardado de antemano.
 	strcpy(component->name, name);
 	component->definition = definition;
 	component->next = NULL;
@@ -130,7 +134,7 @@ char *ComponentNameGrammarAction(char *name)
 // Canvas.
 tCanvas *CanvasGrammarAction(tDefinition *definition)
 {
-	LogInfo("CanvasGrammarAction: '%s, %s, %s'.", definition->template == NULL ? "Template" : "No Template", definition->style == NULL ? "Style" : "No Style", definition->script == NULL ? "Script" : "No Script");
+	LogInfo("CanvasGrammarAction: '%s, %s, %s'.", definition->template != NULL ? "Template" : "No Template", definition->style != NULL ? "Style" : "No Style", definition->script != NULL ? "Script" : "No Script");
 	tCanvas *canvas = malloc(sizeof(tCanvas));
 	canvas->definition = definition;
 	return canvas;
@@ -404,22 +408,22 @@ tElement *ElementGrammarAction(char *name)
 {
 	LogInfo("ElementGrammarAction: '%s', size: %d.", name, yyleng);
 	tElement *element = malloc(sizeof(tElement));
-	// element->name = malloc(yyleng + 1);
-	element->name = malloc(sizeof(char) * (yyleng + 1));
-	strcpy(element->name, name);
-	// strncpy(element->name, name, yyleng);
+	// element->name = malloc(sizeof(char) * (yyleng + 1));
+	element->name = name;
+	// strcpy(element->name, name);
 	element->arguments = NULL;
+	element->next = NULL;
 	return element;
 }
 tElement *ElementWithArgumentsGrammarAction(char *name, tArgumentHeader *arguments)
 {
 	LogInfo("ElementWithArgumentsGrammarAction: 's'.", name);
 	tElement *element = malloc(sizeof(tElement));
-	// element->name = malloc(sizeof(char) * yyleng);
-	element->name = malloc(sizeof(char) * strlen(name) + 1);
-	strcpy(element->name, name);
-	// strncpy(element->name, name, yyleng);
+	element->name = name; // ya viene con espacio guardado por ElementNameGrammarAction
+	// strcpy(element->name, name);
 	element->arguments = arguments;
+	element->next = NULL;
+
 	return element;
 }
 // ElementName

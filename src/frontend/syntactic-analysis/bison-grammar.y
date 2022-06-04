@@ -104,66 +104,6 @@
 %token <token> IMPORT
 
 
-
-
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-
-/*
-%token OPEN_PARENTHESIS
-%token CLOSE_PARENTHESIS
-%token OPEN_CURLY_BRACKET
-%token CLOSE_CURLY_BRACKET
-%token OPEN_SQUARE_BRACKET
-%token CLOSE_SQUARE_BRACKET
-
-%token COMMA
-%token COLON
-%token LINE_COMMENT
-%token DOLLAR
-%token DOT
-
-%token INTEGER
-%token STRING
-%token FLOAT
-%token BOOLEAN
-%token TEXT
-
-%token RIGHT
-%token LEFT
-%token BOTTOM
-%token TOP
-%token CENTER
-
-%token TOP_RIGHT
-%token TOP_LEFT
-%token BOTTOM_RIGHT
-%token BOTTOM_LEFT
-
-%token TOP_CENTER
-%token BOTTOM_CENTER
-%token LEFT_CENTER
-%token RIGHT_CENTER
-
-%token CHILDREN
-
-%token MODULE
-%token PROPS
-%token AS
-%token CANVAS
-%token SCRIPT
-%token TEMPLATE
-%token STYLE
-%token CSS_CODE
-%token JS_CODE
-
-%token IMPORT
-*/
 %%
 
 	program: modules { printf("ProgramGrammarAction !!\n"); state.succeed = true;  state.result = ProgramModulesGrammarAction($1);}

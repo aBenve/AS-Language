@@ -59,7 +59,6 @@ typedef struct tVariable
 
 typedef struct tConstant
 {
-	char *name;
 	void *value;
 } tConstant;
 typedef struct tElement

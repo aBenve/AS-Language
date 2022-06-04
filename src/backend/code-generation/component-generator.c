@@ -14,7 +14,7 @@ char *generateStyleCode(tStyle *style, char *id)
     //  snprintf(styleCode, strlen(id) + CSS_ID_ADITION, "#%s {", id);
     //  strcat(styleCode, style->content);
     //  strcat(styleCode, "}");
-    char *styleCode = malloc(sizeof(char) * strlen(style->content));
+    char *styleCode = malloc(sizeof(char) * strlen(style->content) + 1);
     strcpy(styleCode, style->content);
     return styleCode;
 }
@@ -124,18 +124,17 @@ HTMLCode *generateHTMLCode(tComponent *component, tModule *root)
 
         // EL snprintf le pega a auzToken el string que le pasa por parametro con el formato dado.
         char *auxToken = malloc(sizeof(char) * 1000); // TODO :Deberia depender de si tengo o no un tamanio maximo de nombre de componente.
-        printf("hmlt: %s\n", htmlCode->html);
-        // TODO: Podria estar bueno hacer un hasheo para el class o simplemente sacarlo y usar solo ID
+        // printf("hmlt: %s\n", htmlCode->html);
+        //  TODO: Podria estar bueno hacer un hasheo para el class o simplemente sacarlo y usar solo ID
         snprintf(auxToken, 200, "<div id=\"%s-%d\" class=\"%s\" %s>\n", component->name, identifier, component->name, getPositionToken(aux->posToken));
         identifier++;
         copyAndCheck(htmlCode, auxToken); // Se que auxToken no es NULL;
-        printf("hmlt 2 : %s\n", htmlCode->html);
+        // printf("hmlt 2 : %s\n", htmlCode->html);
 
         //  printf("%s\n", auxToken);
 
         if (aux->constant != NULL)
         {
-            printf("constant %s\n", aux->constant->value);
             copyAndCheck(htmlCode, aux->constant->value);
         }
 
@@ -158,8 +157,8 @@ HTMLCode *generateHTMLCode(tComponent *component, tModule *root)
 
                 // auxElement->name[strlen(auxElement->name) - 1] = '\0';
 
-                printf("name: %s\n", auxElement->name);
-                printf("Founded name: %s\n", findComponentByName(root->components, auxElement->name) == NULL ? "NULL" : findComponentByName(root->components, auxElement->name)->name);
+                // printf("name: %s\n", auxElement->name);
+                // printf("Founded name: %s\n", findComponentByName(root->components, auxElement->name) == NULL ? "NULL" : findComponentByName(root->components, auxElement->name)->name);
 
                 HTMLCode *childHTML = generateHTMLCode(findComponentByName(root->components, auxElement->name), root);
                 if (childHTML != NULL)
@@ -172,7 +171,7 @@ HTMLCode *generateHTMLCode(tComponent *component, tModule *root)
             }
         }
         copyAndCheck(htmlCode, "</div>\n");
-        printf("hmlt fin: %s\n", htmlCode->html);
+        // printf("hmlt fin: %s\n", htmlCode->html);
 
         aux = aux->next;
         free(auxToken);
@@ -194,8 +193,10 @@ tComponentCode *generateComponentCode(tComponent *component)
 
     if (component->definition->script != NULL)
         componentCode->script = generateScriptCode(component->definition->script);
+    // componentCode->script = component->definition->script->content;
     if (component->definition->style != NULL)
         componentCode->style = generateStyleCode(component->definition->style, component->name);
+    // componentCode->style = component->definition->style->content;
     return componentCode;
 }
 
@@ -312,7 +313,11 @@ tComponentCode *generateCanvas(tComponentAsCanvas *canvas, tModule *root)
     auxComponent->next = NULL;
 
     if (canvas->definition->template != NULL)
-        componentCode->html = generateHTMLCode(auxComponent, root)->html;
-
+    {
+        HTMLCode *htmlCode = generateHTMLCode(auxComponent, root);
+        componentCode->html = htmlCode->html;
+        free(htmlCode);
+    }
+    free(auxComponent);
     return componentCode;
 }

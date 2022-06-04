@@ -2,19 +2,18 @@
 #define COMPONENT_GENERATOR_HEADER
 #include "../support/shared.h"
 
-typedef struct tComponentCode
-{
-    char *script;
-    char *style;
-    char *html;
-} tComponentCode;
-
 typedef struct HTMLCode
 {
     char *html;
     int size;
     int used;
 } HTMLCode;
+typedef struct tComponentCode
+{
+    char *script;
+    char *style;
+    char *html;
+} tComponentCode;
 
 tComponentCode *generateCanvas(tComponentAsCanvas *canvas, tModule *root);
 void printCanvasJs(tComponentCode *code);
