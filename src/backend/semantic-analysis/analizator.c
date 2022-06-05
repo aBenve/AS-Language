@@ -1,4 +1,5 @@
 #include "analizator.h"
+#include <string.h>
 
 int hasScriptDef(tDefinition *def)
 {
@@ -15,35 +16,73 @@ typedef struct tJsVariable
     char *value;
 } tJsVariable;
 
-tJsVariable **createVarList(tScript *script)
+typedef tJsVariable **varTable;
+
+#define INITIAL_VAR_TABLE_SIZE 10
+
+int findByName(varTable table, char *name, int size)
 {
-    tJsVariable **list = NULL;
+    for (int i = 0; i < size; i++)
+    {
+        if (strcmp(table[i]->name, name) == 0)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+// look for string started with __ and store them in a table
+varTable createVarList(tScript *script)
+{
+    tJsVariable **list = malloc(sizeof(tJsVariable *) * INITIAL_VAR_TABLE_SIZE);
     printf("Creando lista de variables\n");
+
     char *aux = calloc(strlen(script->content) + 1, sizeof(char));
     strcpy(aux, script->content);
-    int i = 0;
+
+    int size = INITIAL_VAR_TABLE_SIZE;
     int varAmount = 0;
-    while (aux[i] != '\0')
+    int valueIndex = 0;
+
+    char *token = strtok(aux, " ");
+
+    while (token != NULL)
     {
-        // printf("aca: %c\n", aux[i]);
-        if (aux[i] == '_')
+        printf("Token: %s\n", token);
+        if (strlen(token) > 2 && token[0] == '_' && token[1] == '_')
         {
-            if (aux[i + 1] != '\0' && aux[i + 1] != '_')
+
+            if ((valueIndex = findByName(list, token, varAmount)) == -1)
             {
-                varAmount++;
-                // recorro hasta el final del string y lo hguardo como nombre de variable
-                int j = i + 1;
-                while (aux[j] != '\0' && aux[j] != '=' && aux[j] != ';')
-                {
-                    // TODO me sirve esto?
-                    j++;
-                }
+                // Guardo el nombre si no esta en la lista
+                list[varAmount] = malloc(sizeof(tJsVariable));
+                list[varAmount]->name = malloc(sizeof(char) * strlen(token) + 1);
+                strcpy(list[varAmount]->name, token + 2);
+                list[varAmount]->value = NULL;
+                printf("Variable: %s\n", list[varAmount]->name);
+                valueIndex = varAmount++;
+            }
+
+            if (varAmount >= size)
+            {
+                list = realloc(list, sizeof(tJsVariable *) * size * 2);
+                size *= 2;
+            }
+            // Guardo el valor si es que esta definido en esta posicion
+            if (strcmp(token = strtok(NULL, " "), "=") == 0)
+            {
+                token = strtok(NULL, " ");
+                list[valueIndex]->value = calloc(strlen(token) + 1, sizeof(char));
+                strcpy(list[valueIndex]->value, token);
+                printf("Valor: %s\n", list[valueIndex]->value);
             }
         }
-
-        i++;
+        token = strtok(NULL, " ");
     }
+
     free(aux);
+    free(token);
     return list;
 }
 
@@ -51,9 +90,12 @@ tJsVariable **createVarList(tScript *script)
 void thirdGenRepare(tModule *root)
 {
     // 1) Save all the variables define in script code
-    tJsVariable **varList = NULL;
+    varTable varList = NULL;
     if (hasScriptDef(root->canvas->definition) == 1)
         varList = createVarList(root->canvas->definition->script);
+
+    // Una vez formada la tabla de variables, busco en el componente donde estoy si se usan en el HTML y las reemplazo.
+
     return;
 }
 
@@ -66,5 +108,5 @@ void Analice(tModule *root)
     // secondGenRepare(root);
 
     // Aseguro que todas las variables usadas esten definidas
-    // thirdGenRepare(root);
+    thirdGenRepare(root);
 }

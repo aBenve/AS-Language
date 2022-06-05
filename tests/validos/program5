@@ -3,10 +3,10 @@ module miElemento as Canvas {
         top:${miVariable}
     }
     Script:js{
-        let count = 0, miVariable
+        let __count = 0, __miVariable
         if(count < 0)
-            miVariable = "negativo"
+            __miVariable = "negativo"
         else
-            miVariable = "positivo"
+            __miVariable = "positivo"
     }js
 }
