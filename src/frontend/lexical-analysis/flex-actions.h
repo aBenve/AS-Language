@@ -7,85 +7,55 @@
 
 #define INITIAL_BUFFER_SIZE 50
 
-// ! Quiza sirva para el backend.
-// extern tYYSTYPE yylval;
-/**
- * Se definen los diferentes IDs de cada token disponible para el scanner Flex.
- */
+/*
 
-// typedef enum TokenID
-// {
+    ? Otra forma de hacer reglas a mano por si alguna vez son necesarias.
 
-// 	// Por defecto, el valor "0" hace fallar el analizador sintáctico.
-// 	UNKNOWN = 0,
+    char *css = malloc(sizeof(char) * INITIAL_BUFFER_SIZE);
+    int use = 0;
+    int size = INITIAL_BUFFER_SIZE;
+    char c = input();
+    char auxC;
+    while (true)
+    {
+        if (c == '}')
+        {
+            auxC = c;
+            if ((c = input()) == 'c')
+            {
+                auxC = c;
 
-// 	// Código de error de Bison, que permite abortar el escaneo de lexemas cuando
-// 	// se presente un patrón desconocido. El número "257" coincide con el valor
-// 	// que Bison le otorga por defecto, pero además permite que el resto de
-// 	// tokens continúen desde el valor "258" lo que permite proteger los IDs
-// 	// internos que Bison reserva para crear "tokens literales":
-// 	YYUNDEF = 257,
+                if ((c = input()) == 's')
+                {
+                    auxC = c;
 
-// 	// Paréntesis.
-// 	OPEN_PARENTHESIS,
-// 	CLOSE_PARENTHESIS,
-// 	OPEN_CURLY_BRACKET,
-// 	CLOSE_CURLY_BRACKET,
-// 	OPEN_SQUARE_BRACKET,
-// 	CLOSE_SQUARE_BRACKET,
-
-// 	// Separators.
-// 	COMMA,
-// 	COLON,
-// 	LINE_COMMENT,
-// 	DOLLAR,
-// 	DOT,
-// 	// Tipos de dato.
-// 	INTEGER,
-// 	STRING,
-// 	FLOAT,
-// 	BOOLEAN,
-// 	TEXT,
-// 	// Template positions.
-// 	RIGHT,
-// 	LEFT,
-// 	BOTTOM,
-// 	TOP,
-// 	CENTER,
-
-// 	TOP_RIGHT,
-// 	TOP_LEFT,
-// 	BOTTOM_RIGHT,
-// 	BOTTOM_LEFT,
-
-// 	TOP_CENTER,
-// 	BOTTOM_CENTER,
-// 	LEFT_CENTER,
-// 	RIGHT_CENTER,
-
-// 	CHILDREN,
-
-// 	// Parts of module
-// 	MODULE,
-// 	PROPS,
-// 	AS,
-// 	CANVAS,
-// 	SCRIPT,
-// 	TEMPLATE,
-// 	STYLE,
-// 	CSS_CODE,
-// 	JS_CODE,
-
-// 	IMPORT
-
-// } TokenID;
-
-/**
- * Se definen las acciones a ejecutar sobre cada patrón hallado mediante el
- * analizador léxico Flex. Este analizador solo puede identificar
- * construcciones regulares, ya que utiliza un autómata finito determinístico
- * (a.k.a. DFA), como mecanismo de escaneo y reconocimiento.
- */
+                    if ((c = input()) == 's')
+                    {
+                        printf("END CSS\n");
+                        return CssCodePatternAction(css);
+                    }
+                    unput(c);
+                }
+                unput(c);
+            }
+            unput(c);
+            // Guarde el valor de c ya que al hacer unput no lo puedo volver a restaurar
+            c = auxC;
+        }
+        if (c == EOF)
+        {
+            strcpy(css, "error");
+            return CssCodePatternAction(css);
+        }
+        if (use == size)
+        {
+            css = realloc(css, sizeof(char) + strlen(css) + INITIAL_BUFFER_SIZE);
+            size += INITIAL_BUFFER_SIZE;
+        }
+        css[use++] = c;
+        c = input();
+    }
+*/
 
 yytoken_kind_t OpenParenthesisPatternAction();
 yytoken_kind_t CloseParenthesisPatternAction();

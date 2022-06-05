@@ -3,6 +3,11 @@
 #include "flex-actions.h"
 
 
+char *css;
+char * js;
+int useCss = 0, useJs = 0;
+int sizeCss = INITIAL_BUFFER_SIZE, sizeJs = INITIAL_BUFFER_SIZE;
+
 %}
 
 
@@ -22,14 +27,15 @@ float           [0-9]+\.[0-9]*
 boolean          (true|false)
 whitespace		[ \f\n\r\t\v]
 
-/*cssCode         (.|\n)+?(?=\}js)*/
-/*jsCode          (.|\n)+?(?=\}js)*/
 
 word            [a-zA-Z][a-zA-Z0-9_]*
 text            \"(.*?)\"
 
 
 /* Contextos */
+
+%x CSS JS
+
 
 %%
 
@@ -78,91 +84,17 @@ text            \"(.*?)\"
 "Script"                                        { return ScriptPatternAction(); }
 "Style"                                         { return StylePatternAction(); }
 
-"css{"                                          { printf("BEGIN CSS\n");
-
-                                                    char *css = malloc(sizeof(char) * INITIAL_BUFFER_SIZE);
-                                                    char c = input();
-                                                    int use = 0;
-                                                    int size = INITIAL_BUFFER_SIZE;
-                                                    char auxC;
-                                                    while (true)
-                                                    {
-                                                        if (c == '}')
-                                                        {   
-                                                            auxC = c;
-                                                            if ((c = input()) == 'c')
-                                                            {
-                                                                auxC = c;
-
-                                                                if ((c = input()) == 's')
-                                                                {
-                                                                    auxC = c;
-
-                                                                    if ((c = input()) == 's')
-                                                                    {
-                                                                        printf("END CSS\n");
-                                                                        return CssCodePatternAction(css);
-                                                                    }
-                                                                    unput(c);
-                                                                }
-                                                                unput(c);
-                                                            } 
-                                                            unput(c);
-                                                            // Guarde el valor de c ya que al hacer unput no lo puedo volver a restaurar
-                                                            c = auxC;
-                                                        }
-                                                        if (c == EOF)
-                                                        {
-                                                            strcpy(css, "error");
-                                                            return CssCodePatternAction(css);
-                                                        }
-                                                        if (use == size)
-                                                        {
-                                                            css = realloc(css, sizeof(char) + strlen(css) + INITIAL_BUFFER_SIZE);
-                                                            size += INITIAL_BUFFER_SIZE;
-                                                        }
-                                                        css[use++] = c;
-                                                        c = input();
-                                                    }
-    }
+"css{"                                          {   
+                                                    printf("BEGIN CSS\n");
+                                                    css = malloc(sizeof(char) * INITIAL_BUFFER_SIZE);
+                                                    BEGIN(CSS);
+                                                }
 
 "js{"                                           { 
-                                                        printf("BEGIN JS\n");
-                                                        char *js = malloc(sizeof(char) * INITIAL_BUFFER_SIZE);
-                                                        char c = input();
-                                                        char auxC = 0;
-                                                        int use = 0;
-                                                        int size = INITIAL_BUFFER_SIZE;
-                                                        while(true)
-                                                        {
-                                                            if(c == '}'){
-                                                                auxC = c;
-                                                                if((c = input()) == 'j'){
-                                                                    auxC = c;
-                                                                    if((c = input()) == 's'){
-                                                                        printf("END JS\n");
-                                                                        printf("js-end: %s\n", js);
-                                                                        return JsCodePatternAction(js);
-                                                                    }
-                                                                    unput(c);
-                                                                }
-                                                                unput(c);
-                                                                // Guarde el valor de c ya que al hacer unput no lo puedo volver a restaurar
-                                                                c = auxC;
-                                                            }
-                                                            if(c == EOF){
-                                                                    strcpy(js, "error");
-                                                                    return JsCodePatternAction("error");
-                                                            }
-                                                            if (use == size)
-                                                            {
-                                                                js = realloc(js, sizeof(char) + strlen(js) + INITIAL_BUFFER_SIZE);
-                                                                size += INITIAL_BUFFER_SIZE;
-                                                            }
-                                                            js[use++] = c;
-                                                            c = input();
-                                                        }
-                                            }
+                                                    printf("BEGIN JS\n");
+                                                    js = malloc(sizeof(char) * INITIAL_BUFFER_SIZE);
+                                                    BEGIN(JS);
+                                                }
 
 
 {boolean}                                      { return BooleanPatternAction(yytext); }
@@ -177,5 +109,58 @@ text            \"(.*?)\"
 
 .											{ return UnknownPatternAction(yytext); }
 }
+
+
+<CSS>"}css"                                         { 
+                                                        BEGIN(INITIAL);
+                                                        return CssCodePatternAction(css); 
+                                                    }
+
+<CSS>[\n]                                           { 
+                                                        /* 
+                                                            No encontre forma de juntar estas dos reglas. 
+                                                            Parece que si o si se necesita que este la regla default del "." para que no se caiga el parser
+                                                        */
+                                                        if (useCss == sizeCss)
+                                                        {
+                                                             css = realloc(css, sizeof(char) + strlen(css) + INITIAL_BUFFER_SIZE);
+                                                             sizeCss += INITIAL_BUFFER_SIZE;
+                                                        }
+                                                        css[useCss++] = yytext[0];
+                                                    }
+<CSS>.                                              { 
+                                                        if (useCss == sizeCss)
+                                                        {
+                                                                css = realloc(css, sizeof(char) + strlen(css) + INITIAL_BUFFER_SIZE);
+                                                                sizeCss += INITIAL_BUFFER_SIZE;
+                                                        }
+                                                        css[useCss++] = yytext[0];
+                                                    }
+<JS>"}js"                                           { 
+                                                        BEGIN(INITIAL);
+                                                        return JsCodePatternAction(js); 
+                                                    }
+
+<JS>[\n]                                            { 
+                                                        /* 
+                                                            No encontre forma de juntar estas dos reglas. 
+                                                            Parece que si o si se necesita que este la regla default del "." para que no se caiga el parser
+                                                        */
+                                                        if (useJs == sizeJs)
+                                                        {
+                                                                js = realloc(js, sizeof(char) + strlen(js) + INITIAL_BUFFER_SIZE);
+                                                                sizeJs += INITIAL_BUFFER_SIZE;
+                                                        }
+                                                        js[useJs++] = yytext[0];
+                                                    }
+<JS>.                                               { 
+                                                        if (useJs == sizeJs)
+                                                        {
+                                                                js = realloc(js, sizeof(char) + strlen(js) + INITIAL_BUFFER_SIZE);
+                                                                sizeJs += INITIAL_BUFFER_SIZE;
+                                                        }
+                                                        js[useJs++] = yytext[0];
+                                                    }                                                  
+
 
 %%
