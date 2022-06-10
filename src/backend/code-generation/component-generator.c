@@ -4,16 +4,12 @@
 #define HTML_INITIAL_SIZE 100
 #define CSS_ID_ADITION 20
 
-char *generateStyleCode(tStyle *style, char *id)
+char *generateStyleCode(tStyle *style)
 {
     if (style == NULL)
     {
         return NULL;
     }
-    // char *styleCode = malloc(sizeof(char) * strlen(style->content) + strlen(id) + CSS_ID_ADITION);
-    //  snprintf(styleCode, strlen(id) + CSS_ID_ADITION, "#%s {", id);
-    //  strcat(styleCode, style->content);
-    //  strcat(styleCode, "}");
     char *styleCode = malloc(sizeof(char) * strlen(style->content) + 1);
     strcpy(styleCode, style->content);
     return styleCode;
@@ -122,15 +118,15 @@ HTMLCode *generateHTMLCode(tComponent *component, tModule *root)
     while (aux != NULL)
     {
 
-        // EL snprintf le pega a auzToken el string que le pasa por parametro con el formato dado.
-        char *auxToken = malloc(sizeof(char) * 1000); // TODO :Deberia depender de si tengo o no un tamanio maximo de nombre de componente.
+        char *position = getPositionToken(aux->posToken);
+        int len = (strlen(component->name) * 2 + strlen(position) + 1 + 30);
+        char *auxToken = malloc(sizeof(char) * len);
         // printf("hmlt: %s\n", htmlCode->html);
-        //  TODO: Podria estar bueno hacer un hasheo para el class o simplemente sacarlo y usar solo ID
-        snprintf(auxToken, 200, "<div id=\"%s-%d\" class=\"%s\" %s>\n", component->name, identifier, component->name, getPositionToken(aux->posToken));
+        snprintf(auxToken, len, "<div id=\"%s-%d\" class=\"%s\" %s>\n", component->name, identifier, component->name, position);
         identifier++;
         copyAndCheck(htmlCode, auxToken); // Se que auxToken no es NULL;
-        // printf("hmlt 2 : %s\n", htmlCode->html);
 
+        // printf("hmlt 2 : %s\n", htmlCode->html);
         //  printf("%s\n", auxToken);
 
         if (aux->constant != NULL)
@@ -140,7 +136,12 @@ HTMLCode *generateHTMLCode(tComponent *component, tModule *root)
 
         else if (aux->variable != NULL)
         {
-            // TODO: Tengo que ver de intercambiar el valor del js por esta variable.
+            // TODO: Tengo que ver de intercambiar el valor del js por esta variable. DONE en analizator
+            int varLen = strlen(aux->variable->name) + 1 + 30;
+            char *spanVariable = malloc(sizeof(char) * varLen);
+            snprintf(spanVariable, varLen, "\t<span id=\"__%s\" > </span>\n", aux->variable->name);
+            copyAndCheck(htmlCode, spanVariable);
+            free(spanVariable);
             // checkHTMLSize(htmlCode);
         }
 
@@ -193,10 +194,8 @@ tComponentCode *generateComponentCode(tComponent *component)
 
     if (component->definition->script != NULL)
         componentCode->script = generateScriptCode(component->definition->script);
-    // componentCode->script = component->definition->script->content;
     if (component->definition->style != NULL)
-        componentCode->style = generateStyleCode(component->definition->style, component->name);
-    // componentCode->style = component->definition->style->content;
+        componentCode->style = generateStyleCode(component->definition->style);
     return componentCode;
 }
 
@@ -300,7 +299,7 @@ tComponentCode *generateCanvas(tComponentAsCanvas *canvas, tModule *root)
     if (canvas->definition->script != NULL)
         componentCode->script = generateScriptCode(canvas->definition->script);
     if (canvas->definition->style != NULL)
-        componentCode->style = generateStyleCode(canvas->definition->style, "canvas");
+        componentCode->style = generateStyleCode(canvas->definition->style);
 
     // Para armar el HTML necesito pasarlo como componente por que la funcion es recursiva.
     // Como todo se arma a partir del canvas, este recorre todos los elementos que tiene dentro

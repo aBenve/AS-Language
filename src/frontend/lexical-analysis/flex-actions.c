@@ -22,11 +22,7 @@ yytoken_kind_t ColonPatternAction()
 	LogDebug("ColonPatternAction");
 	return COLON;
 }
-yytoken_kind_t CommentPatternAction()
-{
-	LogDebug("CommentPatternAction");
-	return LINE_COMMENT;
-}
+
 yytoken_kind_t CommaPatternAction()
 {
 	LogDebug("CommaPatternAction");

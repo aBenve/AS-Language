@@ -50,7 +50,6 @@ add_executable(Compiler
 	src/backend/free-allocated-mem/freeTree.c
 	src/backend/semantic-analysis/analizator.c
 	src/backend/code-generation/component-generator.c
-	src/backend/domain-specific/calculator.c
 	src/backend/support/logger.c
 	src/frontend/lexical-analysis/flex-actions.c
 	src/frontend/lexical-analysis/flex-scanner.c

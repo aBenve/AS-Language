@@ -13,7 +13,7 @@ void Generator(tModule *result)
 	}
 
 	// LogInfo("%d", result->components->size);
-	printf("Generador de codigo\n");
+	LogInfo("Generador de codigo...\n");
 
 	int componentsAmount = result->components == NULL ? 0 : result->components->size;
 
@@ -21,44 +21,43 @@ void Generator(tModule *result)
 	tComponentCode *canvasCode = NULL;
 
 	// primero el canvas que se que esta siempre
-	printf("Generadando Canvas\n");
+	LogInfo("\tGeneradando Canvas...");
 	canvasCode = generateCanvas(result->canvas, result);
 	// Puede ser que no haya ningun componente
 	if (componentsAmount > 0)
 	{
-		printf("Generando Componentes\n");
+		LogInfo("\tGenerando Componentes...");
 		componentsCode = generateComponents(result->components->first, componentsAmount);
 	}
-	// componentsCode = result->components == NULL ? NULL : generateComponents(result->components->first, componentsAmount);
 
-	// printf("ESTO : %s\n", result->components->first->definition->style->content);
-
-	LogInfo("Generando codigo intermedio...");
+	LogInfo("\tGenerando codigo intermedio...\n");
 	printf("<!DOCTYPE html>\n<html>\n<head>\n<title>Intermediate Code</title>\n");
 
-	printf("<style>\n");
-
 	// css
+	printf("<style>\n");
 	printCanvasCss(canvasCode);
 	printCss(componentsCode, componentsAmount);
 	printf("</style>\n");
 
 	printf("</head>\n");
 	printf("<body>\n");
-	printf("<div id=\"app\">\n");
+
 	// html
-
+	printf("<div id=\"app\">\n");
 	printCanvasHTML(canvasCode);
-
 	printf("</div>\n");
 
+	// Global js functions
 	printf("<script>\n");
+	printf("function updateView(variableName, value) {\n\tdocument.getElementById(variableName).innerHTML = value; \n}\n");
+	printf("</script>\n");
 
 	// js
+	printf("<script>\n");
 	printCanvasJs(canvasCode);
 	printJs(componentsCode, componentsAmount);
-
 	printf("</script>\n");
+
 	printf("</body>\n");
 	printf("</html>\n");
 
@@ -82,28 +81,3 @@ void Generator(tModule *result)
 	free(canvasCode->html);
 	free(canvasCode);
 }
-
-/*
-<!DOCTYPE html>
-<html>
-<body >
-
-<h1 style="position:absolute;top:0px;right:0px;color:blue">My First Heading</h1>
-<h1 style="position:absolute;top:0px;left:0px;color:blue">My First Heading</h1>
-
-<h1 style="position:absolute;bottom:0px;right:0px;color:blue">My First Heading</h1>
-<h1 style="position:absolute;bottom:0px;left:0px;color:blue">My First Heading</h1>
-
-<h1 style="position:absolute;top:50%;right:0px;color:blue;transform:translate(0,-50%)">My First Heading</h1>
-<h1 style="position:absolute;top:50%;left:0px;color:blue;transform:translate(0,-50%)">My First Heading</h1>
-
-<h1 style="position:absolute;bottom:0px;right:50%;color:blue;background:red;width:50%;margin-right:-25%">My First Heading</h1>
-<h1 style="position:absolute;top:0px;left:50%;color:blue;background:red;transform:translate(-50%,0)">My First Heading</h1>
-<h1 style="position:absolute; top: 50%; right: 50%;
-  transform: translate(50%,-50%);color:blue;
-  background: black;">My First Heading</h1>
-
-</body>
-</html>
-
-*/

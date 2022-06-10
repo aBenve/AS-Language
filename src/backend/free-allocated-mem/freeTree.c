@@ -51,8 +51,9 @@ void freeDefinition(tDefinition *definition)
     if (definition->script != NULL)
     {
         free(definition->script->content);
-        free(definition->style);
+        free(definition->script);
     }
+
     if (definition->template != NULL)
         freeTemplate(definition->template);
     free(definition);

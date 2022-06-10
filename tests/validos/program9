@@ -1,9 +1,9 @@
 module miElemento as Canvas {
     Template: {
-        top:[otroElemento] 
+        top: [otroElemento]
     }
     Style:css{
-        color:red;    
+        color:red;
     }css
 }
 
@@ -12,13 +12,10 @@ module otroElemento{
     Template: {
         bottom:"hola"
     }
+    ~ 
+        El objetivo de este test era tener una funcion para las listas que bindee ese resultado en la salida.
+        Pero ese comportamiento no esta hecho
+    ~
     Script: js{
-        
-        let list = []
-        let n = 100
-        for i in n {
-            list.add(`Product n°${i}`)
-        }
-        list.mapToElement("top" ,s -> Element(content: s, background: Color("green")))
     }js
 }

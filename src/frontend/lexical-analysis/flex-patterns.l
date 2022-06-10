@@ -34,7 +34,7 @@ text            \"(.*?)\"
 
 /* Contextos */
 
-%x CSS JS
+%x CSS JS COMMENT
 
 
 %%
@@ -45,7 +45,10 @@ text            \"(.*?)\"
 ")"											{ return CloseParenthesisPatternAction(); }
 
 ":"                                            { return ColonPatternAction(); }
-"~"                                            { return CommentPatternAction(); }
+"~"                                            { 
+                                                printf("BEGIN COMMENT\n");
+                                                BEGIN(COMMENT);
+                                               }    
 ","                                            { return CommaPatternAction(); }
 "$"                                            { return DollarPatternAction(); }
 "."                                            { return DotPatternAction(); }
@@ -87,12 +90,16 @@ text            \"(.*?)\"
 "css{"                                          {   
                                                     printf("BEGIN CSS\n");
                                                     css = malloc(sizeof(char) * INITIAL_BUFFER_SIZE);
+                                                    useCss = 0; 
+                                                    sizeCss = INITIAL_BUFFER_SIZE;
                                                     BEGIN(CSS);
                                                 }
 
 "js{"                                           { 
                                                     printf("BEGIN JS\n");
                                                     js = malloc(sizeof(char) * INITIAL_BUFFER_SIZE);
+                                                    useJs = 0;
+                                                    sizeJs = INITIAL_BUFFER_SIZE;
                                                     BEGIN(JS);
                                                 }
 
@@ -110,9 +117,18 @@ text            \"(.*?)\"
 .											{ return UnknownPatternAction(yytext); }
 }
 
+<COMMENT>"~"                                        {
+                                                        BEGIN(INITIAL);
+                                                        printf("END COMMENT\n");
+                                                         
+                                                    }
+<COMMENT>[\n]                                       {}
+<COMMENT>.                                          {}
+
 
 <CSS>"}css"                                         { 
                                                         BEGIN(INITIAL);
+                                                        printf("END CSS\n");
                                                         return CssCodePatternAction(css); 
                                                     }
 
@@ -138,6 +154,7 @@ text            \"(.*?)\"
                                                     }
 <JS>"}js"                                           { 
                                                         BEGIN(INITIAL);
+                                                        printf("END JS\n");
                                                         return JsCodePatternAction(js); 
                                                     }
 

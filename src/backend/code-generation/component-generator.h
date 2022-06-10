@@ -26,7 +26,7 @@ int hasScript(tComponentCode *code);
 int hasStyle(tComponentCode *code);
 tComponentCode *generateComponentCode(tComponent *component);
 char *generateScriptCode(tScript *script);
-char *generateStyleCode(tStyle *style, char *id);
+char *generateStyleCode(tStyle *style);
 HTMLCode *generateHTMLCode(tComponent *component, tModule *root);
 
 #endif

@@ -107,7 +107,7 @@
 
 %%
 
-	program: modules { printf("ProgramGrammarAction !!\n"); state.succeed = true;  state.result = ProgramModulesGrammarAction($1);}
+	program: modules { state.succeed = true;  state.result = ProgramModulesGrammarAction($1);}
 		;
 	
 	modules: canvas { $$ = CanvasModuleGrammarAction($1);  }

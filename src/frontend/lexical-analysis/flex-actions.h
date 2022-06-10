@@ -60,7 +60,6 @@
 yytoken_kind_t OpenParenthesisPatternAction();
 yytoken_kind_t CloseParenthesisPatternAction();
 yytoken_kind_t ColonPatternAction();
-yytoken_kind_t CommentPatternAction();
 yytoken_kind_t CommaPatternAction();
 yytoken_kind_t DollarPatternAction();
 yytoken_kind_t DotPatternAction();

@@ -33,6 +33,7 @@ const int main(const int argumentCount, const char **arguments)
 		if (state.succeed)
 		{
 			LogInfo("La compilacion fue exitosa. 😃😃😃 ");
+			LogInfo("Analizando...\n");
 			Analice(state.result);
 			Generator(state.result);
 		}

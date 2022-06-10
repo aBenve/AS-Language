@@ -4,31 +4,45 @@ module Canvas {
         center:[b],
         leftCenter:[c]
     }
+
+    ~ Esto es un comentario :) ~
+
     Style: css{
-        #a{
+        .a{
             color: red;
         }
-        #b{
+        .b{
             color: blue;
         }
-        #c{
+        .c{
             color: green;
         }
     }css
+    
+    Script:js{
+        console.log("soy el canvas!"); 
+    }js
 }
 
 module a {
     Template:{
         children:"soy a"
     }
-    
+    Style: css{
+        .b{
+            fontSize: 20px;
+        }
+    }css
 }
 
 module b{
     Template:{
         children:"soy b"
     }
-    Style: css{}css
+    Script:js{
+        console.log("soy b"); 
+    }js
+    
 }
 
 module c {

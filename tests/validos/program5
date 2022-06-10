@@ -1,3 +1,5 @@
+~ Esto es un comentario ~
+
 module miElemento as Canvas {
     Template: {
         top:${miVariable}

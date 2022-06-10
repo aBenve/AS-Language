@@ -1,6 +1,4 @@
 #include "analizator.h"
-#include <string.h>
-#define CUSTOM_ERROR 3
 
 int hasScriptDef(tDefinition *def)
 {
@@ -11,25 +9,11 @@ int hasStyleDef(tDefinition *def)
     return def->style != NULL;
 }
 
-typedef struct tJsVariable
-{
-    char *name;
-} tJsVariable;
-
-typedef struct varTable
-{
-    char **elements;
-    int used;
-    int size;
-} varTable;
-
-#define INITIAL_CONCATENATED_STRING_SIZE 50
-
 int findByName(varTable *table, char *name, int size)
 {
     for (int i = 0; i < size; i++)
     {
-        printf("%s = %s\n", table->elements[i], name);
+        // printf("%s = %s\n", table->elements[i], name);
         if (strcmp(table->elements[i], name) == 0)
         {
             return i;
@@ -42,7 +26,7 @@ int findByVarInHTML(varTable *table, char *name, int size)
 {
     for (int i = 0; i < size; i++)
     {
-        printf("%s = %s\n", table->elements[i], name);
+        // printf("%s = %s\n", table->elements[i], name);
         if (strcmp(table->elements[i] + 2, name) == 0)
         {
             return i;
@@ -57,48 +41,6 @@ char *getUpdateFunction(char *varName, char *value)
     sprintf(function, "updateView('%s', %s)\n", varName, value);
     return function;
 }
-
-void addUpdateFuntcionToString(char *string, int start, int end, char *function)
-{
-    int length = end - start;
-    char *newString = malloc(strlen(string) + strlen(function) + 1);
-    strncpy(newString, string, start);
-    strncpy(newString + start, function, strlen(function));
-    strncpy(newString + start + strlen(function), string + end, strlen(string) - end);
-    newString[strlen(string) + strlen(function)] = '\0';
-    free(string);
-    string = newString;
-}
-
-// node struct for storing string tokens of script->content
-typedef struct tScriptNode
-{
-    char *string;
-    int isVariable;
-    int isValue;
-    char *value; // si es un valor, quiero guardarme el dato limpio, sin \n o ; pero sigo queriendo mantener el string para cuando debo volver a juntar todos los strings
-    char *variable;
-    struct tScriptNode *next;
-    struct tScriptNode *prev;
-} tScriptNode;
-
-// tScriptNode head
-typedef struct tScriptNodeHead
-{
-    tScriptNode *head;
-} tScriptNodeHead;
-
-// void normalizeString(tScriptNode *node, char *token)
-// {
-//     if (strlen(token) > 1 && (token[strlen(token) - 1] == '\n' || token[strlen(token) - 1] == ';'))
-//     {
-//         if (token[strlen(token) - 2] == ';')
-//         {
-//             strncpy(node->string, token, strlen(token) - 2);
-//             node->string[strlen(token) - 2] = '\0';
-//         }
-//     }
-// }
 
 tScriptNode *createTokensListRec(char *token, tScriptNode *prev)
 {
@@ -185,6 +127,7 @@ void freeTokensList(tScriptNode *node)
     {
         return;
     }
+
     freeTokensList(node->next);
     free(node->string);
     free(node->value);
@@ -213,6 +156,7 @@ tScriptNodeHead *updateScriptCode(tScript *script)
     char *concatenatedString = calloc(INITIAL_CONCATENATED_STRING_SIZE, sizeof(char));
     int concatenatedStringSize = INITIAL_CONCATENATED_STRING_SIZE;
     int concatenatedStringUsed = 0;
+
     if (tokensList->head != NULL)
     {
 
@@ -240,10 +184,11 @@ tScriptNodeHead *updateScriptCode(tScript *script)
             // printf("node: %s\n", node->string);
             if (concatenatedStringUsed + strlen(node->string) >= concatenatedStringSize)
             {
-                concatenatedStringSize *= 2;
-                concatenatedString = realloc(concatenatedString, concatenatedStringSize);
+                concatenatedStringSize += strlen(node->string) + INITIAL_CONCATENATED_STRING_SIZE;
+                concatenatedString = realloc(concatenatedString, concatenatedStringSize * sizeof(char));
             }
-            concatenatedStringUsed += strlen(node->string);
+
+            concatenatedStringUsed += strlen(node->string) + 1;
             strcat(strcat(concatenatedString, " "), node->string);
             node = node->next;
         }
@@ -256,12 +201,6 @@ tScriptNodeHead *updateScriptCode(tScript *script)
     free(aux);
     return tokensList;
 }
-
-void addVarToTable(varTable *varTable, char *varName, char *value)
-{
-}
-
-#define INITIAL_VAR_TABLE_SIZE 5
 
 // create complete linked list of tScriptNode storing every token and if the token its a variable, it will be stored in varTable
 varTable *createVarTable(tScript *script, tScriptNodeHead *tokensList)
@@ -283,7 +222,7 @@ varTable *createVarTable(tScript *script, tScriptNodeHead *tokensList)
                 if (toReturnUsed + 1 >= toReturnSize)
                 {
                     toReturnSize *= 2;
-                    toReturn->elements = realloc(toReturn->elements, toReturnSize);
+                    toReturn->elements = realloc(toReturn->elements, toReturnSize * sizeof(char *));
                 }
                 toReturn->elements[toReturnUsed] = calloc(strlen(node->variable) + 1, sizeof(char));
                 strcpy(toReturn->elements[toReturnUsed], node->variable);
@@ -316,8 +255,9 @@ int analiceTemplate(tTemplate *template, varTable *varTable)
         {
             if (auxPosition->variable != NULL)
             {
-                printf("VAR: %s\n", auxPosition->variable->name);
-
+                if (varTable == NULL)
+                    return -1;
+                // printf("VAR: %s\n", auxPosition->variable->name);
                 if (findByVarInHTML(varTable, auxPosition->variable->name, varTable->used) == -1)
                     return -1;
             }
@@ -327,8 +267,22 @@ int analiceTemplate(tTemplate *template, varTable *varTable)
     return 0;
 }
 
+void freeVarTable(varTable *varTable)
+{
+    if (varTable == NULL)
+    {
+        return;
+    }
+    for (int i = 0; i < varTable->used; i++)
+    {
+        free(varTable->elements[i]);
+    }
+    free(varTable->elements);
+    free(varTable);
+}
+
 // Check if the script code has all the variables used in the template code and check if the variables used in template are defined in other components or in the script code
-void Repare(tModule *root)
+void RepareCanvas(tModule *root)
 {
     // 1) Save all the variables define in script code
     varTable *varTable = NULL;
@@ -340,13 +294,49 @@ void Repare(tModule *root)
         tokenList = updateScriptCode(root->canvas->definition->script);
         varTable = createVarTable(root->canvas->definition->script, tokenList);
     }
-
     // Una vez formada la tabla de variables, busco en el componente donde estoy si se usan en el HTML y las reemplazo.
-
     if (analiceTemplate(root->canvas->definition->template, varTable) == -1)
     {
         LogError("Variable usada en HTML no definida.");
         exit(1);
+    }
+    freeTokenHead(tokenList);
+    freeVarTable(varTable);
+
+    return;
+}
+
+void RepareComponents(tModule *root)
+{
+    // 1) Save all the variables define in script code
+    varTable *varTable;
+    tScriptNodeHead *tokenList;
+
+    if (root->components == NULL)
+        return;
+
+    tComponent *aux = root->components->first;
+    while (aux != NULL)
+    {
+        varTable = NULL;
+        tokenList = NULL;
+
+        if (hasScriptDef(aux->definition) == 1)
+        {
+            // update the script code
+            tokenList = updateScriptCode(aux->definition->script);
+            varTable = createVarTable(aux->definition->script, tokenList);
+        }
+        // Una vez formada la tabla de variables, busco en el componente donde estoy si se usan en el HTML y las reemplazo.
+        if (analiceTemplate(aux->definition->template, varTable) == -1)
+        {
+            LogError("Variable usada en HTML no definida.");
+            exit(1);
+        }
+
+        freeTokenHead(tokenList);
+        freeVarTable(varTable);
+        aux = aux->next;
     }
 
     return;
@@ -355,5 +345,8 @@ void Repare(tModule *root)
 void Analice(tModule *root)
 {
     // Aseguro que todas las variables usadas esten definidas
-    Repare(root);
+    LogInfo("\tAnalizando variables de canvas..");
+    RepareCanvas(root);
+    LogInfo("\tAnalizando variables de componentes...");
+    RepareComponents(root);
 }
