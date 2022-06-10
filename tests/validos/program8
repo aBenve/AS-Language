@@ -4,7 +4,7 @@ module miElemento as Canvas {
     }
     Script: js{
         let flag = true
-        let miVariable
+        let __miVariable
         if(flag)
             miVariable = "TRUE!!"
     }js

@@ -52,6 +52,7 @@
 %type <posToken> pItem
 %type <string> componentName
 %type <string> elementName
+%type <string> variableName
 
 
 %token <token> OPEN_PARENTHESIS
@@ -186,8 +187,11 @@
 	elementName: STRING { $$ = ElementNameGrammarAction($1);  }
 		;
 
-	variable: DOLLAR OPEN_CURLY_BRACKET STRING CLOSE_CURLY_BRACKET { $$ = DollarVariableGrammarAction($3);  }
-		| PROPS DOT STRING { $$ = PropVariableGrammarAction($3);  }
+	variable: DOLLAR OPEN_CURLY_BRACKET variableName CLOSE_CURLY_BRACKET { $$ = DollarVariableGrammarAction($3);  }
+		| PROPS DOT variableName { $$ = PropVariableGrammarAction($3);  }
+		;
+
+	variableName: STRING { $$ = VariableNameGrammarAction($1);  }
 		;
 
 	constant: TEXT { $$ = ConstantGrammarAction($1);  }

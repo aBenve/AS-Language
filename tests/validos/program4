@@ -3,6 +3,6 @@ module miElemento as Canvas {
         top:${myList}
     }
     Script:js{
-        let myList = [Element("elemento 1"), Element("elemento 2")]
+        let __myList = [Element("elemento 1"), Element("elemento 2")]
     }js
 }

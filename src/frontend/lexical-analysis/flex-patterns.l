@@ -28,7 +28,7 @@ boolean          (true|false)
 whitespace		[ \f\n\r\t\v]
 
 
-word            [a-zA-Z][a-zA-Z0-9_]*
+word            [a-zA-Z_][a-zA-Z0-9_]*
 text            \"(.*?)\"
 
 

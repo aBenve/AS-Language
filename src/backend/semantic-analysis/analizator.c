@@ -1,5 +1,6 @@
 #include "analizator.h"
 #include <string.h>
+#define CUSTOM_ERROR 3
 
 int hasScriptDef(tDefinition *def)
 {
@@ -15,15 +16,34 @@ typedef struct tJsVariable
     char *name;
 } tJsVariable;
 
-typedef tJsVariable **varTable;
+typedef struct varTable
+{
+    char **elements;
+    int used;
+    int size;
+} varTable;
 
 #define INITIAL_CONCATENATED_STRING_SIZE 50
 
-int findByName(char **table, char *name, int size)
+int findByName(varTable *table, char *name, int size)
 {
     for (int i = 0; i < size; i++)
     {
-        if (strcmp(table[i], name) == 0)
+        printf("%s = %s\n", table->elements[i], name);
+        if (strcmp(table->elements[i], name) == 0)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+int findByVarInHTML(varTable *table, char *name, int size)
+{
+    for (int i = 0; i < size; i++)
+    {
+        printf("%s = %s\n", table->elements[i], name);
+        if (strcmp(table->elements[i] + 2, name) == 0)
         {
             return i;
         }
@@ -169,6 +189,7 @@ void freeTokensList(tScriptNode *node)
     free(node->string);
     free(node->value);
     free(node->variable);
+    free(node);
 }
 void freeTokenHead(tScriptNodeHead *head)
 {
@@ -243,9 +264,12 @@ void addVarToTable(varTable *varTable, char *varName, char *value)
 #define INITIAL_VAR_TABLE_SIZE 5
 
 // create complete linked list of tScriptNode storing every token and if the token its a variable, it will be stored in varTable
-char **createVarTable(tScript *script, tScriptNodeHead *tokensList)
+varTable *createVarTable(tScript *script, tScriptNodeHead *tokensList)
 {
-    char **toReturn = malloc(sizeof(char *) * INITIAL_VAR_TABLE_SIZE);
+    varTable *toReturn = malloc(sizeof(varTable));
+    toReturn->elements = calloc(INITIAL_VAR_TABLE_SIZE, sizeof(char *));
+    toReturn->size = INITIAL_VAR_TABLE_SIZE;
+    toReturn->used = 0;
     int toReturnSize = INITIAL_VAR_TABLE_SIZE;
     int toReturnUsed = 0;
 
@@ -256,97 +280,58 @@ char **createVarTable(tScript *script, tScriptNodeHead *tokensList)
         {
             if (findByName(toReturn, node->variable, toReturnUsed) == -1)
             {
-                toReturn[toReturnUsed] = calloc(strlen(node->variable) + 1, sizeof(char));
-                strcpy(toReturn[toReturnUsed], node->variable);
+                if (toReturnUsed + 1 >= toReturnSize)
+                {
+                    toReturnSize *= 2;
+                    toReturn->elements = realloc(toReturn->elements, toReturnSize);
+                }
+                toReturn->elements[toReturnUsed] = calloc(strlen(node->variable) + 1, sizeof(char));
+                strcpy(toReturn->elements[toReturnUsed], node->variable);
                 toReturnUsed++;
             }
         }
         node = node->next;
     }
 
-    toReturn[toReturnUsed] = NULL;
+    // toReturn[toReturnUsed] = NULL;
+    toReturn->elements[toReturnUsed] = NULL;
+    toReturn->used = toReturnUsed;
+    toReturn->size = toReturnSize;
 
     return toReturn;
 }
 
-/*
-// look for string started with __ and store them in a table
-varTable createVarList(tScript *script)
+int analiceTemplate(tTemplate *template, varTable *varTable)
 {
-    tJsVariable **list = malloc(sizeof(tJsVariable *) * INITIAL_VAR_TABLE_SIZE);
-    printf("Creando lista de variables\n");
+    // recorro las posisicones del template buscnaod variables, si encuentro busco en la tabla
+    // si esta, todo bien, sigo
+    // si no esta, cambio el estado a error
 
-    char *aux = calloc(strlen(script->content) + 1, sizeof(char));
-    char *aux2 = calloc(strlen(script->content) + 1, sizeof(char));
-    strcpy(aux, script->content);
-    strcpy(aux2, script->content);
+    tPositionHeader *auxHeader = template->positions;
 
-    int size = INITIAL_VAR_TABLE_SIZE;
-    int varAmount = 0;
-    int valueIndex = 0;
-    int valuesAdded = 0;
-    char *token = strtok(aux, " ");
-
-    while (token != NULL)
+    if (auxHeader != NULL)
     {
-        printf("Token: %s\n", token);
-        if (strlen(token) > 2 && token[0] == '_' && token[1] == '_')
+        tPositionItem *auxPosition = auxHeader->first;
+        while (auxPosition != NULL)
         {
-
-            if ((valueIndex = findByName(list, token, varAmount)) == -1)
+            if (auxPosition->variable != NULL)
             {
-                // Guardo el nombre si no esta en la lista
-                list[varAmount] = malloc(sizeof(tJsVariable));
-                list[varAmount]->name = malloc(sizeof(char) * strlen(token) + 1);
-                strcpy(list[varAmount]->name, token + 2);
-                // list[varAmount]->value = NULL;
-                printf("Variable: %s\n", list[varAmount]->name);
-                valueIndex = varAmount++;
+                printf("VAR: %s\n", auxPosition->variable->name);
+
+                if (findByVarInHTML(varTable, auxPosition->variable->name, varTable->used) == -1)
+                    return -1;
             }
-
-            if (varAmount >= size)
-            {
-                list = realloc(list, sizeof(tJsVariable *) * size * 2);
-                size *= 2;
-            }
-            // Guardo el valor si es que esta definido en esta posicion
-            if (strcmp(token = strtok(NULL, " "), "=") == 0)
-            {
-                token = strtok(NULL, " "); // token apunta al valor
-                char *toAdd = getUpdateFunction(list[valueIndex]->name, token);
-
-                int pos = (token + strlen(token) - aux) + strlen(toAdd) * valuesAdded;
-                printf("pos: %d\n", pos);
-                // agrego el string a aux2 toAdd en la posicion pos
-                // aux2 = realloc(aux2, sizeof(char) * (strlen(aux2) + strlen(toAdd) + 1));
-
-                addUpdateFuntcionToString(aux2, pos, pos + strlen(toAdd), toAdd);
-                // strcpy(aux2 + pos, toAdd);
-                printf("aux: %s\n", aux2);
-
-                valuesAdded++;
-                free(toAdd);
-                // Debo agregar al string updateView(list[varAmount]->name, token)
-
-                // list[valueIndex]->value = calloc(strlen(token) + 1, sizeof(char));
-                // strcpy(list[valueIndex]->value, token);
-                // printf("Valor: %s\n", list[valueIndex]->value);
-            }
+            auxPosition = auxPosition->next;
         }
-        token = strtok(NULL, " ");
     }
-
-    free(aux);
-    free(aux2);
-    free(token);
-    return list;
+    return 0;
 }
-*/
+
 // Check if the script code has all the variables used in the template code and check if the variables used in template are defined in other components or in the script code
-void thirdGenRepare(tModule *root)
+void Repare(tModule *root)
 {
     // 1) Save all the variables define in script code
-    char **varTable = NULL;
+    varTable *varTable = NULL;
     tScriptNodeHead *tokenList = NULL;
 
     if (hasScriptDef(root->canvas->definition) == 1)
@@ -358,17 +343,17 @@ void thirdGenRepare(tModule *root)
 
     // Una vez formada la tabla de variables, busco en el componente donde estoy si se usan en el HTML y las reemplazo.
 
+    if (analiceTemplate(root->canvas->definition->template, varTable) == -1)
+    {
+        LogError("Variable usada en HTML no definida.");
+        exit(1);
+    }
+
     return;
 }
 
 void Analice(tModule *root)
 {
-    // Saco los js{ js } y los css{ css } -> * YA NO ES NECESARIO
-    // firstGenRepare(root);
-
-    // Analizo si los nombres se guardaron bien y los tamanios
-    // secondGenRepare(root);
-
     // Aseguro que todas las variables usadas esten definidas
-    thirdGenRepare(root);
+    Repare(root);
 }

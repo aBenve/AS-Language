@@ -4,8 +4,9 @@ module miElemento as Canvas {
     }
     Script: js{
         let count = 0
-        let miVariable
-        if(count < 0)
-            miVariable = "negativo"
+        let __miVariable
+        if(count < 0){
+            __miVariable = "negativo"
+        }
     }js
 }

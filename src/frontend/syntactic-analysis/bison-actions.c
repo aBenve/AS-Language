@@ -442,9 +442,10 @@ tVariable *DollarVariableGrammarAction(char *name)
 	LogInfo("DollarVariableGrammarAction: '%s'.", name);
 	tVariable *variable = malloc(sizeof(tVariable));
 	// variable->name = malloc(sizeof(char) * yyleng);
-	variable->name = malloc(sizeof(char) * strlen(name) + 1);
-	strcpy(variable->name, name);
-	// strncpy(variable->name, name, yyleng);
+	// variable->name = malloc(sizeof(char) * strlen(name) + 1);
+	variable->name = name;
+	// strcpy(variable->name, name);
+	//  strncpy(variable->name, name, yyleng);
 	variable->type = VARIABLE_TYPE_DOLLAR;
 	return variable;
 }
@@ -453,15 +454,22 @@ tVariable *PropVariableGrammarAction(char *name)
 	LogInfo("PropVariableGrammarAction: '%s'.", name);
 
 	tVariable *variable = malloc(sizeof(tVariable));
-	variable->name = malloc(sizeof(char) * strlen(name) + 1);
 
-	// variable->name = malloc(sizeof(char) * yyleng);
-	strcpy(variable->name, name);
-	// strncpy(variable->name, name, yyleng);
+	// variable->name = malloc(sizeof(char) * strlen(name) + 1);
+	variable->name = name;
+	// strcpy(variable->name, name);
 	variable->type = VARIABLE_TYPE_PROP;
 	return variable;
 }
 
+// VaribleName
+char *VariableNameGrammarAction(char *name)
+{
+	LogInfo("VariableNameGrammarAction: '%s', Size: %d.", name, yyleng);
+	char *variableName = malloc(sizeof(char) * strlen(name) + 1);
+	strcpy(variableName, name);
+	return variableName;
+}
 // Constant
 tConstant *ConstantGrammarAction(char *value)
 {

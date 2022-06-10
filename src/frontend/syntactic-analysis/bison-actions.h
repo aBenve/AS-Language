@@ -90,6 +90,9 @@ char *ElementNameGrammarAction(char *name);
 tVariable *DollarVariableGrammarAction(char *name);
 tVariable *PropVariableGrammarAction(char *name);
 
+// VariableName
+char *VariableNameGrammarAction(char *name);
+
 // Constant
 tConstant *ConstantGrammarAction(char *value);
 // ArgumentList.
