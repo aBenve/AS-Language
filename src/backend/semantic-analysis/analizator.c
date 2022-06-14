@@ -347,6 +347,6 @@ void Analice(tModule *root)
     // Aseguro que todas las variables usadas esten definidas
     LogInfo("\tAnalizando variables de canvas..");
     RepareCanvas(root);
-    LogInfo("\tAnalizando variables de componentes...");
+    LogInfo("\tAnalizando variables de componentes...\n");
     RepareComponents(root);
 }

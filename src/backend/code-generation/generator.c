@@ -13,7 +13,6 @@ void Generator(tModule *result)
 	}
 
 	// LogInfo("%d", result->components->size);
-	LogInfo("Generador de codigo...\n");
 
 	int componentsAmount = result->components == NULL ? 0 : result->components->size;
 
