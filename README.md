@@ -96,9 +96,9 @@ En el futuro seria de gran impacto la implementacion de diferentes ayudas al usu
 Seria ideal el soporte a mas estructuras de datos que si soporta js como listas u objetos. La posibilidad de armar una lista y enviarla directamente al HTML o de tener objetos y poder mostrar ciertas areas del mismo seria una gran ayuda al usuario.
 
 ## Bibliografía
-Flex & Bison (https://web.iitd.ac.in/~sumeet/flex__bison.pdf)
-Writing Your Own Toy Compiler Using Flex, Bison and LLVM (https://gnuu.org/2009/09/18/writing-your-own-toy-compiler/)
-Flex regex (https://people.cs.aau.dk/~marius/sw/flex/Flex-Regular-Expressions.html)
+1. Flex & Bison (https://web.iitd.ac.in/~sumeet/flex__bison.pdf)
+2. Writing Your Own Toy Compiler Using Flex, Bison and LLVM (https://gnuu.org/2009/09/18/writing-your-own-toy-compiler/)
+3. Flex regex (https://people.cs.aau.dk/~marius/sw/flex/Flex-Regular-Expressions.html)
 
 
 <!-- Referencias y bibliografía. La diferencia entre referencia y bibliografía es que las
