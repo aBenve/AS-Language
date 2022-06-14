@@ -2,11 +2,13 @@
 
 <!-- esta imagen es solo de prueba -->
 <img src="/res/linux.svg" alt="logo" style="float: left; vertical-align:baseline" width="100"/>
-<!-- omit in toc --># AS Language
+<!-- omit in toc -->
+# AS Language
 
 ---
 
-<!-- omit in toc --> # Tabla de contenidos
+<!-- omit in toc --> 
+# Tabla de contenidos
 
 - [Introducción](#introducción)
 - [Consideraciones adicionales](#consideraciones-adicionales)
