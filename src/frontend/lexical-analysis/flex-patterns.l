@@ -3,8 +3,8 @@
 #include "flex-actions.h"
 
 
-char *css;
-char * js;
+char *css = NULL;
+char * js = NULL;
 int useCss = 0, useJs = 0;
 int sizeCss = INITIAL_BUFFER_SIZE, sizeJs = INITIAL_BUFFER_SIZE;
 
@@ -139,7 +139,12 @@ text            \"(.*?)\"
                                                         */
                                                         if (useCss == sizeCss)
                                                         {
-                                                             css = realloc(css, sizeof(char) + strlen(css) + INITIAL_BUFFER_SIZE);
+                                                            int auxSize = 50;
+                                                                if(css != NULL){
+                                                                    auxSize = sizeCss;
+                                                                }
+                                                                auxSize += sizeof(char) + INITIAL_BUFFER_SIZE;
+                                                             css = realloc(css, auxSize);
                                                              sizeCss += INITIAL_BUFFER_SIZE;
                                                         }
                                                         css[useCss++] = yytext[0];
@@ -147,7 +152,12 @@ text            \"(.*?)\"
 <CSS>.                                              { 
                                                         if (useCss == sizeCss)
                                                         {
-                                                                css = realloc(css, sizeof(char) + strlen(css) + INITIAL_BUFFER_SIZE);
+                                                                int auxSize = 50;
+                                                                if(css != NULL){
+                                                                    auxSize = sizeCss;
+                                                                }
+                                                                auxSize += sizeof(char) + INITIAL_BUFFER_SIZE;
+                                                                css = realloc(css, auxSize);
                                                                 sizeCss += INITIAL_BUFFER_SIZE;
                                                         }
                                                         css[useCss++] = yytext[0];
@@ -165,7 +175,11 @@ text            \"(.*?)\"
                                                         */
                                                         if (useJs == sizeJs)
                                                         {
-                                                                js = realloc(js, sizeof(char) + strlen(js) + INITIAL_BUFFER_SIZE);
+                                                                int auxSize = 50;
+                                                                if(css != NULL){
+                                                                    auxSize = strlen(js);
+                                                                }
+                                                                js = realloc(js, sizeof(char) + auxSize + INITIAL_BUFFER_SIZE);
                                                                 sizeJs += INITIAL_BUFFER_SIZE;
                                                         }
                                                         js[useJs++] = yytext[0];
@@ -173,7 +187,11 @@ text            \"(.*?)\"
 <JS>.                                               { 
                                                         if (useJs == sizeJs)
                                                         {
-                                                                js = realloc(js, sizeof(char) + strlen(js) + INITIAL_BUFFER_SIZE);
+                                                                int auxSize = 50;
+                                                                if(css != NULL){
+                                                                    auxSize = strlen(js);
+                                                                }
+                                                                js = realloc(js, sizeof(char) + auxSize + INITIAL_BUFFER_SIZE);
                                                                 sizeJs += INITIAL_BUFFER_SIZE;
                                                         }
                                                         js[useJs++] = yytext[0];

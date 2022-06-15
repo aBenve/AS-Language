@@ -115,6 +115,8 @@ tScriptNode *createTokensList(char *jsCode)
         strcpy(toReturn->string, token);
         toReturn->value = NULL;
         toReturn->variable = NULL;
+        toReturn->isVariable = 0;
+        toReturn->isValue = 0;
         toReturn->next = createTokensListRec(strtok(NULL, " "), toReturn);
         toReturn->prev = NULL;
     }
@@ -195,7 +197,7 @@ tScriptNodeHead *updateScriptCode(tScript *script)
     }
     // printf("concatenatedString: %s\n", concatenatedString);
 
-    script->content = calloc(strlen(concatenatedString) + 1, sizeof(char));
+    script->content = realloc(script->content, strlen(concatenatedString) + 1);
     strcpy(script->content, concatenatedString);
     free(concatenatedString);
     free(aux);

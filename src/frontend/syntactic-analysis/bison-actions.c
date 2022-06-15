@@ -366,9 +366,26 @@ tPosToken *ChildrenGrammarAction(int token)
 // Style.
 tStyle *StyleGrammarAction(char *cssCode)
 {
-	LogInfo("StyleGrammarAction: '%s'.", cssCode);
+	if (cssCode != NULL)
+		LogInfo("StyleGrammarAction: '%s'.", cssCode);
+	/*
+		valgrind se queja en esta linea (y similares) porque no le gusta
+		que al hacer malloc para style, como tiene un puntero adentro
+		el mismo no se inicializa en un valor específico, por lo que
+		queda un puntero sin inicializar, aunque en la linea siguiente
+		se lo inicialice con el malloc
+		https://stackoverflow.com/questions/27594992/uninitialized-value-was-created-by-a-heap-allocation
+		(segunda respuesta)
+	*/
 	tStyle *style = malloc(sizeof(tStyle));
 	style->content = malloc(sizeof(char) * (strlen(cssCode) + 1));
+
+	/*
+		posiblemente flex no ponga un \0 al final de los strings que genera
+		y por eso al checkear con valgrind marca error en los strcpy o strlen
+		que se le aplican a esos strings. Como en este caso no podemos acotar
+		la longitud de cssCode para usar strncpy, el error de valgrind queda.
+	*/
 	strcpy(style->content, cssCode);
 	free(cssCode);
 	return style;
@@ -377,9 +394,14 @@ tStyle *StyleGrammarAction(char *cssCode)
 // Script.
 tScript *ScriptGrammarAction(char *jsCode)
 {
-	LogInfo("ScriptGrammarAction: '%s'.", jsCode);
+	if (jsCode != NULL)
+		LogInfo("ScriptGrammarAction: '%s'.", jsCode);
 	tScript *script = malloc(sizeof(tScript));
-	script->content = malloc(sizeof(char) * (strlen(jsCode) + 1));
+	size_t newSize = sizeof(char) * (strlen(jsCode) + 1);
+	if (script->content == NULL)
+		script->content = malloc(newSize);
+	else
+		script->content = realloc(script->content, newSize);
 	strcpy(script->content, jsCode);
 	return script;
 }
