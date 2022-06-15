@@ -176,7 +176,7 @@ text            \"(.*?)\"
                                                         if (useJs == sizeJs)
                                                         {
                                                                 int auxSize = 50;
-                                                                if(css != NULL){
+                                                                if(js != NULL){
                                                                     auxSize = strlen(js);
                                                                 }
                                                                 js = realloc(js, sizeof(char) + auxSize + INITIAL_BUFFER_SIZE);
@@ -188,7 +188,7 @@ text            \"(.*?)\"
                                                         if (useJs == sizeJs)
                                                         {
                                                                 int auxSize = 50;
-                                                                if(css != NULL){
+                                                                if(js != NULL){
                                                                     auxSize = strlen(js);
                                                                 }
                                                                 js = realloc(js, sizeof(char) + auxSize + INITIAL_BUFFER_SIZE);
